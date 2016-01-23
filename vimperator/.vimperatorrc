@@ -1,0 +1,7 @@
+colorscheme chrome
+noremap j 8j
+noremap k 8k
+noremap J <C-n>
+noremap K <C-p>
+set hintchars=asdfghjkl
+
