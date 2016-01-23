@@ -129,7 +129,6 @@ blur-background-frame = false;
 # Do not let blur radius adjust based on window opacity.
 blur-background-fixed = false;
 blur-background-exclude = [
-    "window_type = 'dock'",
     "window_type = 'desktop'"
 ];
 
@@ -234,5 +233,5 @@ wintypes:
         # focus: Whether to always consider windows of this type focused.
         focus = true;
     };
-    dock = { opacity = 0.9 };
+    dock = { opacity = 1.0 };
 };
