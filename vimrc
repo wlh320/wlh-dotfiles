@@ -378,19 +378,20 @@ endfunction
     " required!   
     Plugin 'VundleVim/Vundle.vim'
     Plugin 'tpope/vim-fugitive'
-    Plugin 'Lokaltog/vim-easymotion'  
+    "Plugin 'Lokaltog/vim-easymotion'  
     Plugin 'scrooloose/nerdtree'
+    Plugin 'scrooloose/nerdcommenter'
     Plugin 'jiangmiao/auto-pairs'
     Plugin 'bling/vim-airline'
     Plugin 'majutsushi/tagbar'
     Plugin 'kien/ctrlp.vim'
     Plugin 'sirver/ultisnips'
     "Plugin 'garbas/vim-snipmate'
-    "Plugin 'honza/vim-snippets'
+    Plugin 'honza/vim-snippets'
     Plugin 'MarcWeber/vim-addon-mw-utils'
     Plugin 'tomtom/tlib_vim'
     Plugin 'ervandew/supertab'
-    Plugin 'scrooloose/syntastic'
+    "Plugin 'scrooloose/syntastic'
     call vundle#end()            " required
     filetype plugin indent on    " required
 
