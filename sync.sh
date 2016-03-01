@@ -3,6 +3,7 @@ echo "Step 1 : Copy dotfiles"
 git clone https://github.com/wlh320/wlh-dotfiles.git ~/wlh-dotfiles
 ln -s ~/wlh-dotfiles/vimrc ~/.vimrc
 ln -s ~/wlh-dotfiles/zshrc ~/.zshrc
+ln -s ~/wlh-dotfiles/zprofile ~/.zprofile
 ln -s ~/wlh-dotfiles/i3 ~/.i3
 ln -s ~/wlh-dotfiles/compton ~/.compton.conf
 ln -s ~/wlh-dotfiles/vimperator ~/.vimperator

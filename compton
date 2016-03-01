@@ -100,7 +100,7 @@ shadow-exclude = [
     "name = 'poniesbox'"
 ];
 # Avoid drawing shadow on all shaped windows (see also: --detect-rounded-corners)
-shadow-ignore-shaped = false;
+shadow-ignore-shaped = true;
 
 #################################
 #
@@ -131,7 +131,6 @@ blur-background-fixed = false;
 blur-background-exclude = [
     "window_type = 'desktop'",
     "name = 'xfce4-screenshooter'"
-
 ];
 
 #################################
@@ -235,5 +234,5 @@ wintypes:
         # focus: Whether to always consider windows of this type focused.
         focus = true;
     };
-    dock = { opacity = 1.0 };
+    dock = { opacity = 0.9 };
 };

@@ -192,7 +192,6 @@ map k gk
 
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
 map <space> /
-map <c-space> ?
 
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
@@ -210,8 +209,7 @@ map <leader>bd :Bclose<cr>
 map <leader>ba :bufdo bd<cr>
 
 " Useful mappings for managing tabs
-nmap <C-n> :tabnew<CR>
-imap <C-n> <Esc>:tabnew<CR>
+nmap <leader>tn :tabnew<CR>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<CR>
 map <leader>tm :tabmove 
@@ -378,7 +376,6 @@ endfunction
     " required!   
     Plugin 'VundleVim/Vundle.vim'
     Plugin 'tpope/vim-fugitive'
-    "Plugin 'Lokaltog/vim-easymotion'  
     Plugin 'scrooloose/nerdtree'
     Plugin 'scrooloose/nerdcommenter'
     Plugin 'jiangmiao/auto-pairs'
@@ -386,12 +383,12 @@ endfunction
     Plugin 'majutsushi/tagbar'
     Plugin 'kien/ctrlp.vim'
     Plugin 'sirver/ultisnips'
-    "Plugin 'garbas/vim-snipmate'
-    Plugin 'honza/vim-snippets'
-    Plugin 'MarcWeber/vim-addon-mw-utils'
     Plugin 'tomtom/tlib_vim'
+    Plugin 'garbas/vim-snipmate'
+    Plugin 'MarcWeber/vim-addon-mw-utils'
     Plugin 'ervandew/supertab'
-    "Plugin 'scrooloose/syntastic'
+    Plugin 'scrooloose/syntastic'
+    Plugin 'davidhalter/jedi-vim'
     call vundle#end()            " required
     filetype plugin indent on    " required
 
