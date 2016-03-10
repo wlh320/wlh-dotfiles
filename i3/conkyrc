@@ -15,7 +15,7 @@ TEXT
 #{ "full_text": " ${exec curl icanhazip.com}"},
 { "full_text" : ${if_up eno1}"  ${upspeed eno1}/s  ${downspeed eno1}/s"${else}""${endif}, "color" : "\#94F397" },
 { "full_text" : ${if_up wlo1}"  ${upspeed wlo1}/s  ${downspeed wlo1}/s"${else}""${endif}, "color" : "\#94F397" },
-{ "full_text" : " ${cpu cpu0}%" , "color" : "\#8BC3E7"},
+{ "full_text" : " ${cpu cpu0}%" , "color" : "\#8BC3E7" },
 { "full_text" : " ${mem}" , "color" : "\#B987D9" },
 { "full_text" : " ${fs_used_perc /}%" , "color" : "\#FF9D17" },
 { "full_text" : " ${fs_used_perc /home}%" , "color" : "\#F3EA0C" },

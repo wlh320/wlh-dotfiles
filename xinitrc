@@ -9,4 +9,6 @@ export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
 export XMODIFIERS="@im=fcitx"
 xrdb ~/.Xresources &
-exec i3
+
+exec openbox-session
+#exec i3
