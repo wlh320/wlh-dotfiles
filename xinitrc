@@ -10,5 +10,4 @@ export QT_IM_MODULE=fcitx
 export XMODIFIERS="@im=fcitx"
 xrdb ~/.Xresources &
 
-exec openbox-session
-#exec i3
+exec i3

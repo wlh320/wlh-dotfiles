@@ -160,27 +160,23 @@ bindsym $mod+minus scratchpad show
 bindsym $mod+Shift+r restart
 
 #快捷键
-bindsym $mod+r      exec rofi -show run -font "hack 13" -fg "#aaaaaa" -bg "#000000" -hlfg "#3399FF" -hlbg "#505050" -opacity "90" -bw 0 -terminal xfce4-terminal
-#bindsym $mod+r      exec --no-startup-id dmenu_run -fn 'Monaco for Powerline-12' -nb '#333333' -nf '#FFFFFF' -sb '#111111' -sf '#3399FF'
-bindsym $mod+Tab    exec rofi -show window -font "hack 13" -fg "#aaaaaa" -bg "#000000" -hlfg "#3399FF" -hlbg "#505050" -opacity "90"
+bindsym $mod+r exec rofi -show run -lines 8 -font "Roboto 14" -hide-scrollbar -opacity "90" -separator-style "none" -line-margin 7 -padding 340 -width 100
+
+bindsym $mod+Tab    exec rofi -show window -lines 3 -font "Roboto 14" -hide-scrollbar -opacity "90" -separator-style "none" -line-margin 7 -padding 340 -width 100
 
 #程序启动
-bindsym $mod+Return     exec --no-startup-id xfce4-terminal
-bindsym $mod+t          exec --no-startup-id terminology
+bindsym $mod+Return     exec --no-startup-id konsole
 bindsym $mod+e          exec --no-startup-id thunar
 bindsym $mod+c	        exec --no-startup-id google-chrome-stable
 bindsym $mod+z          exec --no-startup-id zeal
-bindsym $mod+Delete     exec --no-startup-id xfce4-taskmanager
-#xfce4-panel 有时候会出bug, 需要重启一下(don't know why)
-bindsym $mod+Shift+x    exec --no-startup-id xfce4-panel -r
+bindsym $mod+Delete     exec --no-startup-id xfce3-taskmanager
+bindsym $mod+s          exec --no-startup-id sublime_text_3_imfix
 #截图
-#bindsym Print exec shutter -f -e -o './Pictures/screenshot/%y-%m-%d-%H:%M:%S.png' 
-#bindsym $mod+Print exec shutter -s -e -o './Pictures/screenshot/%y-%m-%d-%H:%M:%S_$w_$h.png'
-bindsym Print exec xfce4-screenshooter -f 
-bindsym $mod+Print exec xfce4-screenshooter -r
+bindsym Print exec deepin-screenshot -s /home/wlh/Pictures/screenshot/deepin-`date +%y-%m-%d-%T`.png -f 
+bindsym $mod+Print exec deepin-screenshot -s /home/wlh/Pictures/screenshot/deepin-`date +%y-%m-%d-%T`.png
 
 #锁屏
-bindsym mod1+l      exec cd ~/program/i3lock-fancy && ./lock
+bindsym mod1+l      exec cd ~/program/i3lock-fancy && ./lock -f "Monaco"
 
 #系统命令
 set $mode_system  注销(O) 关机(S) 重启(R) 取消(Esc)
@@ -209,15 +205,15 @@ client.background       #FFFFFF
 bindsym $mod+m bar mode toggle
 
 bar {
-    font pango:苹方 bold 12
+    font pango:Noto Sans CJK SC 12
     i3bar_command i3bar -t
-    height 28
+    height 26
     #禁止systemtray
-    tray_output none
+    #tray_output none
     # i3bar调用
     status_command ~/.i3/jconky
     # 显示位置top/bottom
-    position bottom
+    position top
     # 是否隐藏
     #mode hide
     # 拆解工作区名（隐藏前面的1:2:3:……）
@@ -240,17 +236,17 @@ bar {
 
 ############################# 开机启动 ###############################
 
-exec --no-startup-id feh --bg-scale /home/wlh/Pictures/wallpapers/shulin.jpg
+exec --no-startup-id feh --bg-scale /home/wlh/Pictures/wallpapers/earth.jpg
 #exec --no-startup-id feh --bg-scale /home/wlh/Pictures/wallpapers/papers.co-vm09-poly-blue-purple-abstract-pattern-29-wallpaper.jpg
 #exec --no-startup-id nitrogen --restore
 exec --no-startup-id compton -b
 #exec --no-startup-id xfce4-panel
-exec --no-startup-id tint2
+#exec --no-startup-id tint2
 exec --no-startup-id volumeicon
-exec --no-startup-id xfce4-power-manager
 exec --no-startup-id nm-applet
+exec --no-startup-id xfce4-power-manager
 #exec --no-startup-id shutter --min_at_startup
-exec --no-startup-id ~/program/XX-Net-2.7.3/start.sh
+#exec --no-startup-id ~/program/XX-Net-2.7.3/start.sh
 exec --no-startup-id xset r rate 300 45
 exec --no-startup-id xset dpms 600
 #闲置600秒后黑屏
