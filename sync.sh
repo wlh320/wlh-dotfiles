@@ -20,4 +20,7 @@ ln -s ~/wlh-dotfiles/i3 ~/.i3
 # rofi need this
 ln -s ~/wlh-dotfiles/Xresources ~/.Xresources
 
+# editorconfig
+ln -s ~/wlh-dotfiles/editorconfig ~/.editorconfig
+
 echo "Enjoy it!"

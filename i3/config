@@ -160,23 +160,23 @@ bindsym $mod+minus scratchpad show
 bindsym $mod+Shift+r restart
 
 #快捷键
-bindsym $mod+r exec rofi -show run -lines 8 -font "Roboto 14" -hide-scrollbar -opacity "90" -separator-style "none" -line-margin 7 -padding 340 -width 100
+bindsym $mod+r exec rofi -show run -lines 8 -font "Roboto 14" -hide-scrollbar -fake-background background -separator-style "none" -line-margin 7 -padding 340 -width 100
 
 bindsym $mod+Tab    exec rofi -show window -lines 3 -font "Roboto 14" -hide-scrollbar -opacity "90" -separator-style "none" -line-margin 7 -padding 340 -width 100
 
 #程序启动
 bindsym $mod+Return     exec --no-startup-id konsole
-bindsym $mod+e          exec --no-startup-id thunar
-bindsym $mod+c	        exec --no-startup-id google-chrome-stable
+bindsym $mod+e          exec --no-startup-id nautilus
+bindsym $mod+c	        exec --no-startup-id firefox
 bindsym $mod+z          exec --no-startup-id zeal
-bindsym $mod+Delete     exec --no-startup-id xfce3-taskmanager
+bindsym $mod+Delete     exec --no-startup-id gnome-system-monitor
 bindsym $mod+s          exec --no-startup-id sublime_text_3_imfix
 #截图
 bindsym Print exec deepin-screenshot -s /home/wlh/Pictures/screenshot/deepin-`date +%y-%m-%d-%T`.png -f 
 bindsym $mod+Print exec deepin-screenshot -s /home/wlh/Pictures/screenshot/deepin-`date +%y-%m-%d-%T`.png
 
 #锁屏
-bindsym mod1+l      exec cd ~/program/i3lock-fancy && ./lock -f "Monaco"
+bindsym mod1+l      exec cd ~/program/i3lock-fancy && ./lock -f "monaco"
 
 #系统命令
 set $mode_system  注销(O) 关机(S) 重启(R) 取消(Esc)
@@ -236,14 +236,14 @@ bar {
 
 ############################# 开机启动 ###############################
 
-exec --no-startup-id feh --bg-scale /home/wlh/Pictures/wallpapers/earth.jpg
+exec --no-startup-id feh --bg-scale /home/wlh/Pictures/wallpapers/slide/qlpMBa.jpg
 #exec --no-startup-id feh --bg-scale /home/wlh/Pictures/wallpapers/papers.co-vm09-poly-blue-purple-abstract-pattern-29-wallpaper.jpg
 #exec --no-startup-id nitrogen --restore
 exec --no-startup-id compton -b
 #exec --no-startup-id xfce4-panel
 #exec --no-startup-id tint2
 exec --no-startup-id volumeicon
-exec --no-startup-id nm-applet
+#exec --no-startup-id nm-applet
 exec --no-startup-id xfce4-power-manager
 #exec --no-startup-id shutter --min_at_startup
 #exec --no-startup-id ~/program/XX-Net-2.7.3/start.sh

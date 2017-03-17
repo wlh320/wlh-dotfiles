@@ -1,8 +1,8 @@
-"说明：修改自著名vimrc 
-"https://github.com/amix/vimrc/blob/master/vimrcs/basic.vim
-"
-"
-"持续更新。。。
+" w0h's vimrc 
+" Nov 15, 2016
+" 修改自著名vimrc  amix
+" https://github.com/amix/vimrc/blob/master/vimrcs/basic.vim
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -109,7 +109,7 @@ set foldcolumn=1
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable syntax highlighting
-	syntax enable 
+    syntax enable 
     colorscheme molokai
     set t_Co=256
     set cursorline
@@ -191,7 +191,7 @@ map j gj
 map k gk
 
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map <space> /
+"map <space> /
 
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
@@ -366,38 +366,63 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    set nocompatible              " be iMproved  
-    filetype off                  " required!  
-      
-    set rtp+=~/.vim/bundle/Vundle.vim
-	call vundle#begin() 
-      
-    " let Vundle manage Vundle  
-    " required!   
-    Plugin 'VundleVim/Vundle.vim'
-    Plugin 'tpope/vim-fugitive'
-    Plugin 'scrooloose/nerdtree'
-    Plugin 'scrooloose/nerdcommenter'
-    Plugin 'jiangmiao/auto-pairs'
-    Plugin 'vim-airline/vim-airline'
-    Plugin 'vim-airline/vim-airline-themes'
-    Plugin 'majutsushi/tagbar'
-    Plugin 'kien/ctrlp.vim'
-    Plugin 'sirver/ultisnips'
-    Plugin 'tomtom/tlib_vim'
-    Plugin 'garbas/vim-snipmate'
-    Plugin 'MarcWeber/vim-addon-mw-utils'
-    Plugin 'ervandew/supertab'
-    Plugin 'scrooloose/syntastic'
-    Plugin 'davidhalter/jedi-vim'
-    call vundle#end()            " required
-    filetype plugin indent on    " required
+if !exists('g:nouseplugmanager')
+    let g:nouseplugmanager = 0 " use plug.vim by default
+endif
+if (g:nouseplugmanager == 0)
+    if filereadable(expand("~/.vim/autoload/plug.vim"))
+        call plug#begin('~/.vim/plugged')
+
+        Plug 'bling/vim-airline'
+        Plug 'vim-airline/vim-airline-themes'
+        Plug 'mattn/emmet-vim'
+        Plug 'scrooloose/nerdcommenter'
+        Plug 'scrooloose/nerdtree'
+        Plug 'majutsushi/tagbar'
+        "Plug 'Shougo/neocomplete.vim'
+        Plug 'SirVer/ultisnips'
+        Plug 'ctrlpvim/ctrlp.vim'
+        Plug 'jiangmiao/auto-pairs'
+        Plug 'ervandew/supertab'
+        "Plug 'scrooloose/syntastic'
+        Plug 'w0rp/ale'
+
+
+        if filereadable(expand("~/.vimrc.plug"))
+            source $HOME/.vimrc.plug
+        endif
+
+        call plug#end()
+    else
+        if executable('git')
+            if !isdirectory(expand("~/.vim/autoload"))
+                call mkdir($HOME . "/.vim/autoload", "p")
+            endif
+            if has('python')
+                exe 'py import os,urllib2; f = urllib2.urlopen("https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"); g = open(os.path.join(os.path.expanduser("~"), ".vim/autoload/plug.vim"), "wb"); g.write(f.read())'
+            else
+                if has('python3')
+                    exe 'py3 import os,urllib.request; f = urllib.request.urlopen("https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"); g = open(os.path.join(os.path.expanduser("~"), ".vim/autoload/plug.vim"), "wb"); g.write(f.read())'
+                else
+                    exe "silent !echo 'let g:nouseplugmanager = 1' > ~/.vimrc.before"
+                    echo "WARNING: plug.vim has been disabled due to the absence of 'python' or 'python3' features.\nIf you solve the problem and want to use it, you should delete the line with 'let g:nouseplugmanager = 1' in '.vimrc.before' file.\nIf you don't take any action, that's OK. This message won't appear again. For more infomation fell free to contact me."
+                endif
+            endif
+            if filereadable(expand("~/.vim/autoload/plug.vim"))
+                echo "PluginManager - plug.vim just installed! vim will quit now.\nYou should relaunch vim, use PlugInstall to install plugins OR do nothing just use the basic one."
+                exe 'qall!'
+            endif
+        else
+            exe "silent !echo 'let g:nouseplugmanager = 1' > ~/.vimrc.before"
+            echo "WARNING: plug.vim has been disabled due to the absence of 'git'.\nIf you solve the problem and want to use it, you should delete the line with 'let g:nouseplugmanager = 1' in '.vimrc.before' file.\nIf you don't take any action, that's OK. This message won't appear again. For more infomation fell free to contact me."
+        endif
+    endif
+endif
 
     " NERDTree
     map <F7> :NERDTreeToggle<CR>
     " Tagbar
     nmap <F8> :TagbarToggle<CR>
-
     " AirLine
     set laststatus=2
     " 使用powerline打过补丁的字体
@@ -417,210 +442,16 @@ endfunction
     endif
     let g:airline_left_sep=''
     let g:airline_right_sep=''
-    nnoremap [b :bp<CR>
-    nnoremap ]b :bn<CR>
 
-    " make YCM compatible with UltiSnips (using supertab)
-    let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-    let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-    let g:SuperTabDefaultCompletionType = '<C-n>'
-    let g:ycm_global_ycm_extra_conf = '~/coding/.ycm_extra_conf.py'
+    let g:ycm_autoclose_preview_window_after_completion=1
+    set completeopt-=preview
+    let g:ycm_confirm_extra_conf = 0
+    let g:ycm_key_invoke_completion = '<C-Space>'
+    let g:ycm_use_ultisnips_completer = 1
+    " 自动补全配置
+    set completeopt=longest,menu  "让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
+    autocmd InsertLeave * if pumvisible() == 0|pclose|endif   "离开插入模式后自动关闭预览窗口
+    inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"  "回车即选中当前项"
 
-    " better key bindings for UltiSnipsExpandTrigger
-    let g:UltiSnipsExpandTrigger = "<tab>"
-    let g:UltiSnipsJumpForwardTrigger = "<tab>"
-    let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-    set fileencodings=utf-8,gb2312,gbk,gb18030
-
-    set completeopt=longest
-
-"------------------------------------------------------------------------------
-"  < 判断操作系统是否是 Windows 还是 Linux >
-"------------------------------------------------------------------------------
-if(has("win32") || has("win64") || has("win95") || has("win16"))
-    let g:iswindows = 1
-else
-    let g:iswindows = 0
-endif
- 
-"------------------------------------------------------------------------------
-"  < 判断是终端还是 Gvim >
-"------------------------------------------------------------------------------
-if has("gui_running")
-    let g:isGUI = 1
-else
-    let g:isGUI = 0
-endif
- 
-"------------------------------------------------------------------------------
-"  < 编译、连接、运行配置 >
-"------------------------------------------------------------------------------
-" F5 一键保存、编译、连接存并运行
-map <F5> :call Run()<CR>
-imap <F5> <ESC>:call Run()<CR>
- 
-" F9 一键保存并编译
-map <F9> :call Compile()<CR>
-imap <F9> <ESC>:call Compile()<CR>
-  
-let s:LastShellReturn_C = 0
-let s:LastShellReturn_L = 0
-let s:ShowWarning = 1
-let s:Obj_Extension = '.o'
-let s:Exe_Extension = '.exe'
-let s:Sou_Error = 0
-
-let s:windows_CFlags = 'gcc\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
-let s:linux_CFlags = 'gcc\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
- 
-let s:windows_CPPFlags = 'g++\ -fexec-charset=gbk\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
-let s:linux_CPPFlags = 'g++\ -Wall\ -g\ -O0\ -c\ %\ -o\ %<.o'
- 
-func! Compile()
-    exe ":ccl"
-    exe ":update"
-    if expand("%:e") == "c" || expand("%:e") == "cpp" || expand("%:e") == "cxx"
-        let s:Sou_Error = 0
-        let s:LastShellReturn_C = 0
-        let Sou = expand("%:p")
-        let Obj = expand("%:p:r").s:Obj_Extension
-        let Obj_Name = expand("%:p:t:r").s:Obj_Extension
-        let v:statusmsg = ''
-        if !filereadable(Obj) || (filereadable(Obj) && (getftime(Obj) < getftime(Sou)))
-            redraw!
-            if expand("%:e") == "c"
-                if g:iswindows
-                    exe ":setlocal makeprg=".s:windows_CFlags
-                else
-                    exe ":setlocal makeprg=".s:linux_CFlags
-                endif
-                echohl WarningMsg | echo " compiling..."
-                silent make
-            elseif expand("%:e") == "cpp" || expand("%:e") == "cxx"
-                if g:iswindows
-                    exe ":setlocal makeprg=".s:windows_CPPFlags
-                else
-                    exe ":setlocal makeprg=".s:linux_CPPFlags
-                endif
-                echohl WarningMsg | echo " compiling..."
-                silent make
-            endif
-            redraw!
-            if v:shell_error != 0
-                let s:LastShellReturn_C = v:shell_error
-            endif
-            if g:iswindows
-                if s:LastShellReturn_C != 0
-                    exe ":bo cope"
-                    echohl WarningMsg | echo " compilation failed"
-                else
-                    if s:ShowWarning
-                        exe ":bo cw"
-                    endif
-                    echohl WarningMsg | echo " compilation successful"
-                endif
-            else
-                if empty(v:statusmsg)
-                    echohl WarningMsg | echo " compilation successful"
-                else
-                    exe ":bo cope"
-                endif
-            endif
-        else
-            echohl WarningMsg | echo ""Obj_Name"is up to date"
-        endif
-    else
-        let s:Sou_Error = 1
-        echohl WarningMsg | echo " please choose the correct source file"
-    endif
-    exe ":setlocal makeprg=make"
-endfunc
- 
-func! Link()
-    call Compile()
-    if s:Sou_Error || s:LastShellReturn_C != 0
-        return
-    endif
-    let s:LastShellReturn_L = 0
-    let Sou = expand("%:p")
-    let Obj = expand("%:p:r").s:Obj_Extension
-    if g:iswindows
-        let Exe = expand("%:p:r").s:Exe_Extension
-        let Exe_Name = expand("%:p:t:r").s:Exe_Extension
-    else
-        let Exe = expand("%:p:r")
-        let Exe_Name = expand("%:p:t:r")
-    endif
-    let v:statusmsg = ''
-    if filereadable(Obj) && (getftime(Obj) >= getftime(Sou))
-        redraw!
-        if !executable(Exe) || (executable(Exe) && getftime(Exe) < getftime(Obj))
-            if expand("%:e") == "c"
-                setlocal makeprg=gcc\ -o\ %<\ %<.o
-                echohl WarningMsg | echo " linking..."
-                silent make
-            elseif expand("%:e") == "cpp" || expand("%:e") == "cxx"
-                setlocal makeprg=g++\ -o\ %<\ %<.o
-                echohl WarningMsg | echo " linking..."
-                silent make
-            endif
-            redraw!
-            if v:shell_error != 0
-                let s:LastShellReturn_L = v:shell_error
-            endif
-            if g:iswindows
-                if s:LastShellReturn_L != 0
-                    exe ":bo cope"
-                    echohl WarningMsg | echo " linking failed"
-                else
-                    if s:ShowWarning
-                        exe ":bo cw"
-                    endif
-                    echohl WarningMsg | echo " linking successful"
-                endif
-            else
-                if empty(v:statusmsg)
-                    echohl WarningMsg | echo " linking successful"
-                else
-                    exe ":bo cope"
-                endif
-            endif
-        else
-            echohl WarningMsg | echo ""Exe_Name"is up to date"
-        endif
-    endif
-    setlocal makeprg=make
-endfunc
- 
-func! Run()
-    let s:ShowWarning = 0
-    call Link()
-    let s:ShowWarning = 1
-    if s:Sou_Error || s:LastShellReturn_C != 0 || s:LastShellReturn_L != 0
-        return
-    endif
-    let Sou = expand("%:p")
-    let Obj = expand("%:p:r").s:Obj_Extension
-    if g:iswindows
-        let Exe = expand("%:p:r").s:Exe_Extension
-    else
-        let Exe = expand("%:p:r")
-    endif
-    if executable(Exe) && getftime(Exe) >= getftime(Obj) && getftime(Obj) >= getftime(Sou)
-        redraw!
-        echohl WarningMsg | echo " running..."
-        if g:iswindows
-            exe ":!%<.exe"
-        else
-            if g:isGUI
-                exe ":!xfce4-terminal -x /usr/bin/cb_console_runner ./%<"
-            else
-                "exe ":!xfce4-terminal -x /usr/bin/cb_console_runner ./%<"
-                exe ":!./%<;read"
-            endif
-        endif
-        redraw!
-        echohl WarningMsg | echo " running finish"
-    endif
-endfunc
+    "vim-emmet
+    let g:user_emmet_expandabbr_key='<leader><Tab>'
