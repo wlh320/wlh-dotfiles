@@ -379,14 +379,14 @@ if (g:nouseplugmanager == 0)
         Plug 'scrooloose/nerdcommenter'
         Plug 'scrooloose/nerdtree'
         Plug 'majutsushi/tagbar'
-        "Plug 'Shougo/neocomplete.vim'
         Plug 'SirVer/ultisnips'
         Plug 'ctrlpvim/ctrlp.vim'
         Plug 'jiangmiao/auto-pairs'
-        Plug 'ervandew/supertab'
-        "Plug 'scrooloose/syntastic'
         Plug 'w0rp/ale'
+        Plug 'Shougo/neocomplete.vim'
 
+        Plug 'ervandew/supertab'
+        Plug 'lilydjwg/fcitx.vim'
 
         if filereadable(expand("~/.vimrc.plug"))
             source $HOME/.vimrc.plug
@@ -443,15 +443,10 @@ endif
     let g:airline_left_sep=''
     let g:airline_right_sep=''
 
-    let g:ycm_autoclose_preview_window_after_completion=1
-    set completeopt-=preview
-    let g:ycm_confirm_extra_conf = 0
-    let g:ycm_key_invoke_completion = '<C-Space>'
-    let g:ycm_use_ultisnips_completer = 1
-    " 自动补全配置
-    set completeopt=longest,menu  "让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
-    autocmd InsertLeave * if pumvisible() == 0|pclose|endif   "离开插入模式后自动关闭预览窗口
-    inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"  "回车即选中当前项"
+    " neocomplete settings
+    let g:neocomplete#enable_at_startup = 1
+    let g:neocomplete#enable_smart_case = 1
+    inoremap <expr><Tab> pumvisible() ? "\<C-n>": "\<Tab>"
 
     "vim-emmet
     let g:user_emmet_expandabbr_key='<leader><Tab>'
