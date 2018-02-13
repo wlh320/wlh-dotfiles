@@ -23,7 +23,7 @@ set shiftwidth=4
 set tabstop=4
 
 set ai "Auto indent
-set si "Smart indent
+"set si "Smart indent
 set nowrap "Wrap lines
 
 let mapleader = ","
@@ -85,9 +85,14 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'w0rp/ale'
     Plug 'lilydjwg/fcitx.vim'
     Plug 'ervandew/supertab'
-    Plug 'roxma/nvim-completion-manager'
-    Plug 'roxma/ncm-clang'
     Plug 'Chiel92/vim-autoformat'
+
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    Plug 'Shougo/neco-syntax'
+    Plug 'zchee/deoplete-go', { 'do': 'make'}
+    Plug 'zchee/deoplete-clang'
+    Plug 'zchee/deoplete-jedi'
+
 
 call plug#end()
 
@@ -99,6 +104,7 @@ nmap <F8> :TagbarToggle<CR>
 
 " AirLine
 set laststatus=2
+let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_tabs = 1
 let g:airline#extensions#tabline#exclude_preview = 1
@@ -127,4 +133,9 @@ au BufWrite * :Autoformat " auto format after save
 let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 1
+
+" deoplete
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
+let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
 
