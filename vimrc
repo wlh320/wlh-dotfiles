@@ -1,4 +1,4 @@
-" w0h's vimrc 
+" w0h's vimrc
 " Nov 15, 2016
 " 修改自著名vimrc  amix
 " https://github.com/amix/vimrc/blob/master/vimrcs/basic.vim
@@ -30,7 +30,7 @@ let g:mapleader = ","
 " Fast saving
 nmap <leader>w :w!<cr>
 
-" :W sudo saves the file 
+" :W sudo saves the file
 " (useful for handling the permission-denied error)
 command W w !sudo tee % > /dev/null
 
@@ -39,10 +39,6 @@ command W w !sudo tee % > /dev/null
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
-
-" Avoid garbled characters in Chinese language windows OS
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
 
 " Turn on the WiLd menu
 set wildmenu
@@ -55,11 +51,6 @@ else
     set wildignore+=.git\*,.hg\*,.svn\*
 endif
 
-"Always show current position
-"set ruler
-
-" Height of the command bar
-"set cmdheight=2
 
 " A buffer becomes hidden when it is abandoned
 set hid
@@ -76,23 +67,23 @@ endif
 " Ignore case when searching
 set ignorecase
 
-" When searching try to be smart about cases 
+" When searching try to be smart about cases
 set smartcase
 
 " Highlight search results
 set hlsearch
 
 " Makes search act like search in modern browsers
-set incsearch 
+set incsearch
 
 " Don't redraw while executing macros (good performance config)
-set lazyredraw 
+set lazyredraw
 
 " For regular expressions turn magic on
 set magic
 
 " Show matching brackets when text indicator is over them
-set showmatch 
+set showmatch
 " How many tenths of a second to blink when matching brackets
 set mat=2
 
@@ -109,26 +100,26 @@ set foldcolumn=1
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable syntax highlighting
-    syntax enable 
-    colorscheme molokai
-    set t_Co=256
-    set cursorline
-    highlight Comment ctermbg=none
-    highlight Constant ctermbg=none
-    highlight Normal ctermbg=none
-    highlight NonText ctermbg=none
-    highlight Special ctermbg=none
-    highlight SpecialKey ctermbg=none
-    highlight Cursor ctermbg=none
-    highlight Cursorline ctermfg=none
-    "highlight ErrorMsg ctermbg=none
-    highlight Folded ctermbg=none
-    highlight LineNr ctermbg=none
-    highlight FoldColumn ctermbg=none
-    highlight Title ctermbg=none
-    highlight SignColumn ctermbg=none
-    syn match cFunction /\<\w\+\%(\s*(\)\@=/
-    hi default link cFunction Include
+syntax enable
+colorscheme jellybeans
+set t_Co=256
+set cursorline
+"highlight Comment ctermbg=none
+"highlight Constant ctermbg=none
+"highlight Normal ctermbg=none
+"highlight NonText ctermbg=none
+"highlight Special ctermbg=none
+"highlight SpecialKey ctermbg=none
+"highlight Cursor ctermbg=none
+"highlight Cursorline ctermfg=none
+""highlight ErrorMsg ctermbg=none
+"highlight Folded ctermbg=none
+"highlight LineNr ctermbg=none
+"highlight FoldColumn ctermbg=none
+"highlight Title ctermbg=none
+"highlight SignColumn ctermbg=none
+"syn match cFunction /\<\w\+\%(\s*(\)\@=/
+"hi default link cFunction Include
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -136,8 +127,8 @@ if has("gui_running")
     set guioptions-=e
     set t_Co=256
     set guitablabel=%M\ %t
-    set guifont=Monaco\ for\ Powerline\ 14
-    colorscheme molokai
+    set guifont=Hack\ 14
+    colorscheme gruvbox
 endif
 
 " Set utf8 as standard encoding and en_US as the standard language
@@ -212,8 +203,8 @@ map <leader>ba :bufdo bd<cr>
 nmap <leader>tn :tabnew<CR>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<CR>
-map <leader>tm :tabmove 
-map <leader>t<leader> :tabnext 
+map <leader>tm :tabmove
+map <leader>t<leader> :tabnext
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -256,7 +247,7 @@ autocmd BufWrite *.coffee :call DeleteTrailingWS()
 vnoremap <silent> gv :call VisualSelection('gv', '')<CR>
 
 " Open Ag and put the cursor in the right position
-map <leader>g :Ag 
+map <leader>g :Ag
 
 " When you press <leader>r you can search and replace the selected text
 vnoremap <silent> <leader>r :call VisualSelection('replace', '')<CR>
@@ -276,18 +267,6 @@ map <leader>cc :botright cope<cr>
 map <leader>co ggVGy:tabnew<cr>:set syntax=qf<cr>pgg
 map <leader>n :cn<cr>
 map <leader>p :cp<cr>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Spell checking
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Pressing ,ss will toggle and untoggle spell checking
-map <leader>ss :setlocal spell!<cr>
-
-" Shortcuts using <leader>
-map <leader>sn ]s
-map <leader>sp [s
-map <leader>sa zg
-map <leader>s? z=
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
@@ -311,7 +290,7 @@ function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
     emenu Foo.Bar
     unmenu Foo
-endfunction 
+endfunction
 
 function! VisualSelection(direction, extra_filter) range
     let l:saved_reg = @"
@@ -379,14 +358,15 @@ if (g:nouseplugmanager == 0)
         Plug 'scrooloose/nerdcommenter'
         Plug 'scrooloose/nerdtree'
         Plug 'majutsushi/tagbar'
-        Plug 'SirVer/ultisnips'
         Plug 'ctrlpvim/ctrlp.vim'
         Plug 'jiangmiao/auto-pairs'
-        Plug 'w0rp/ale'
-        Plug 'Shougo/neocomplete.vim'
-
-        Plug 'ervandew/supertab'
         Plug 'lilydjwg/fcitx.vim'
+
+        Plug 'w0rp/ale'
+        Plug 'ervandew/supertab'
+        Plug 'Chiel92/vim-autoformat'
+        Plug 'maralla/completor.vim'
+
 
         if filereadable(expand("~/.vimrc.plug"))
             source $HOME/.vimrc.plug
@@ -419,34 +399,46 @@ if (g:nouseplugmanager == 0)
     endif
 endif
 
-    " NERDTree
-    map <F7> :NERDTreeToggle<CR>
-    " Tagbar
-    nmap <F8> :TagbarToggle<CR>
-    " AirLine
-    set laststatus=2
-    " 使用powerline打过补丁的字体
-    let g:airline_powerline_fonts = 1
-    " 开启tabline
-    let g:airline#extensions#tabline#enabled = 1
-    " tabline中当前buffer两端的分隔字符
-    let g:airline#extensions#tabline#left_sep = ' '
-    " tabline中未激活buffer两端的分隔字符
-    let g:airline#extensions#tabline#left_alt_sep = '|'
-    " tabline中buffer显示编号
-    let g:airline#extensions#tabline#buffer_nr_show = 1
-    " 映射切换buffer的键位
-    let g:airline_theme='murmur'
-    if has("gui_running")
-        let g:airline_theme='wombat'
-    endif
-    let g:airline_left_sep=''
-    let g:airline_right_sep=''
+set completeopt-=preview
 
-    " neocomplete settings
-    let g:neocomplete#enable_at_startup = 1
-    let g:neocomplete#enable_smart_case = 1
-    inoremap <expr><Tab> pumvisible() ? "\<C-n>": "\<Tab>"
+"vim-emmet
+let g:user_emmet_expandabbr_key='<leader><Tab>'
 
-    "vim-emmet
-    let g:user_emmet_expandabbr_key='<leader><Tab>'
+" NERDTree
+map <F7> :NERDTreeToggle<CR>
+
+" Tagbar
+nmap <F8> :TagbarToggle<CR>
+
+" AirLine
+set laststatus=2
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_tabs = 1
+let g:airline#extensions#tabline#exclude_preview = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline_left_sep=''
+let g:airline_right_sep=''
+let g:airline_theme='murmur'
+
+" SuperTab
+let g:SuperTabDefaultCompletionType = "<c-n>"
+
+" Ale
+"let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 0
+
+" CtrlP
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+    \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
+    \ }
+
+" autoformat
+au BufWrite * :Autoformat " auto format after save
+let g:autoformat_autoindent = 0
+let g:autoformat_retab = 0
+let g:autoformat_remove_trailing_spaces = 1
+
