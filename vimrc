@@ -34,6 +34,9 @@ nmap <leader>w :w!<cr>
 " (useful for handling the permission-denied error)
 command W w !sudo tee % > /dev/null
 
+" Show command
+set showcmd
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -354,18 +357,21 @@ if (g:nouseplugmanager == 0)
 
         Plug 'bling/vim-airline'
         Plug 'vim-airline/vim-airline-themes'
-        Plug 'mattn/emmet-vim'
         Plug 'scrooloose/nerdcommenter'
         Plug 'scrooloose/nerdtree'
         Plug 'majutsushi/tagbar'
-        Plug 'ctrlpvim/ctrlp.vim'
         Plug 'jiangmiao/auto-pairs'
         Plug 'lilydjwg/fcitx.vim'
 
-        Plug 'w0rp/ale'
-        Plug 'ervandew/supertab'
         Plug 'Chiel92/vim-autoformat'
-        Plug 'maralla/completor.vim'
+        Plug 'Yggdroot/indentLine'
+        Plug 'sheerun/vim-polyglot'
+
+        " syntax check and complete
+        Plug 'w0rp/ale'
+        "Plug 'ervandew/supertab'
+        Plug 'Valloric/YouCompleteMe'
+        Plug 'Shougo/echodoc.vim'
 
 
         if filereadable(expand("~/.vimrc.plug"))
@@ -424,7 +430,7 @@ let g:airline_right_sep=''
 let g:airline_theme='murmur'
 
 " SuperTab
-let g:SuperTabDefaultCompletionType = "<c-n>"
+"let g:SuperTabDefaultCompletionType = "<c-y>"
 
 " Ale
 "let g:ale_lint_on_text_changed = 'never'
@@ -442,3 +448,9 @@ let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 1
 
+" echodoc
+set noshowmode
+let g:echodoc_enable_at_startup = 1
+
+" youcompleteme
+let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'

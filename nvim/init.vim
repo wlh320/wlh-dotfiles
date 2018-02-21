@@ -68,6 +68,8 @@ inoremap <Down> <nop>
 inoremap <Left> <nop>
 inoremap <Right> <nop>
 
+" terminal
+tnoremap <Esc> <C-\><C-n>
 
 """"""""""""""""""""""""""
 " Plugins                "
@@ -76,22 +78,25 @@ call plug#begin('~/.config/nvim/plugged')
 
     Plug 'bling/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
-    Plug 'mattn/emmet-vim'
     Plug 'scrooloose/nerdcommenter'
     Plug 'scrooloose/nerdtree'
     Plug 'majutsushi/tagbar'
-    Plug 'ctrlpvim/ctrlp.vim'
     Plug 'jiangmiao/auto-pairs'
-    Plug 'w0rp/ale'
     Plug 'lilydjwg/fcitx.vim'
-    Plug 'ervandew/supertab'
-    Plug 'Chiel92/vim-autoformat'
 
+    Plug 'Chiel92/vim-autoformat'
+    Plug 'Yggdroot/indentLine'
+    Plug 'sheerun/vim-polyglot'
+
+    " syntax check and complete
+    Plug 'w0rp/ale'
+    Plug 'ervandew/supertab'
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
     Plug 'Shougo/neco-syntax'
     Plug 'zchee/deoplete-go', { 'do': 'make'}
     Plug 'zchee/deoplete-clang'
     Plug 'zchee/deoplete-jedi'
+    Plug 'Shougo/echodoc.vim'
 
 
 call plug#end()
@@ -116,7 +121,7 @@ let g:airline_right_sep=''
 let g:airline_theme='murmur'
 
 " SuperTab
-let g:SuperTabDefaultCompletionType = "<c-n>"
+let g:SuperTabDefaultCompletionType = "<c-y>"
 
 " Ale
 "let g:ale_lint_on_text_changed = 'never'
@@ -135,7 +140,10 @@ let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 1
 
 " deoplete
+set completeopt-=preview
+set noshowmode
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
+let g:echodoc_enable_at_startup = 1
 
