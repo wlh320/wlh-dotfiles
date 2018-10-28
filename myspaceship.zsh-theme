@@ -239,6 +239,10 @@ PROMPT="$PROMPT"'$(spaceship_build_prompt) '
 [[ $SPACESHIP_PROMPT_SEPARATE_LINE == true ]] && PROMPT="$PROMPT$NEWLINE"
 PROMPT="$PROMPT"'$(spaceship_return_status) '
 
+# HH:MM:SS
+RPROMPT="[%{$fg_bold[cyan]%}%*%{$reset_color%}]"
+
+
 # Set PS2 - continuation interactive prompt
 PS2="%{$fg_bold[yellow]%}"
 PS2+="%{$SPACESHIP_PROMPT_SYMBOL%} "
