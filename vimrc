@@ -361,7 +361,7 @@ if (g:nouseplugmanager == 0)
         Plug 'scrooloose/nerdtree'
         Plug 'majutsushi/tagbar'
         Plug 'jiangmiao/auto-pairs'
-        Plug 'lilydjwg/fcitx.vim'
+        "Plug 'lilydjwg/fcitx.vim'
 
         Plug 'Chiel92/vim-autoformat'
         Plug 'Yggdroot/indentLine'
@@ -369,9 +369,12 @@ if (g:nouseplugmanager == 0)
 
         " syntax check and complete
         Plug 'w0rp/ale'
-        "Plug 'ervandew/supertab'
-        Plug 'Valloric/YouCompleteMe'
+        Plug 'ervandew/supertab'
+        "Plug 'Valloric/YouCompleteMe'
         Plug 'Shougo/echodoc.vim'
+        Plug 'Shougo/deoplete.nvim'
+        Plug 'roxma/nvim-yarp'
+        Plug 'roxma/vim-hug-neovim-rpc'
 
 
         if filereadable(expand("~/.vimrc.plug"))
@@ -430,7 +433,7 @@ let g:airline_right_sep=''
 let g:airline_theme='murmur'
 
 " SuperTab
-"let g:SuperTabDefaultCompletionType = "<c-y>"
+let g:SuperTabDefaultCompletionType = "<c-n>"
 
 " Ale
 "let g:ale_lint_on_text_changed = 'never'
@@ -454,3 +457,5 @@ let g:echodoc_enable_at_startup = 1
 
 " youcompleteme
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+" deocomplete
+let g:deoplete#enable_at_startup = 1

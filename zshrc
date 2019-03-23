@@ -50,7 +50,7 @@ ZSH_THEME="myspaceship"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git sudo colored-man-pages autojump) 
+plugins=(git sudo colored-man-pages autojump)
 
 # User configuration
 
@@ -83,4 +83,19 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias vim="nvim"
+alias open=xdg-open
+
+# where proxy
+proxy () {
+  export http_proxy="http://127.0.0.1:6666"
+  export https_proxy="http://127.0.0.1:6666"
+  echo "HTTP Proxy on"
+}
+
+# where noproxy
+noproxy () {
+  unset http_proxy
+  unset https_proxy
+  echo "HTTP Proxy off"
+}
+
