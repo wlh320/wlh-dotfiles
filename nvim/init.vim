@@ -23,8 +23,7 @@ set shiftwidth=4
 set tabstop=4
 
 set ai "Auto indent
-"set si "Smart indent
-set nowrap "Wrap lines
+set wrap "Wrap lines
 
 let mapleader = ","
 let g:mapleader = ","
@@ -76,27 +75,19 @@ tnoremap <Esc> <C-\><C-n>
 """"""""""""""""""""'"""""
 call plug#begin('~/.config/nvim/plugged')
 
-    Plug 'bling/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
+    Plug 'itchyny/lightline.vim'
     Plug 'scrooloose/nerdcommenter'
     Plug 'scrooloose/nerdtree'
     Plug 'majutsushi/tagbar'
     Plug 'jiangmiao/auto-pairs'
-    Plug 'lilydjwg/fcitx.vim'
 
     Plug 'Chiel92/vim-autoformat'
     Plug 'Yggdroot/indentLine'
     Plug 'sheerun/vim-polyglot'
 
     " syntax check and complete
-    Plug 'w0rp/ale'
-    Plug 'ervandew/supertab'
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-    Plug 'Shougo/neco-syntax'
-    Plug 'zchee/deoplete-go', { 'do': 'make'}
-    Plug 'zchee/deoplete-clang'
-    Plug 'zchee/deoplete-jedi'
-    Plug 'Shougo/echodoc.vim'
+    Plug 'lervag/vimtex'
+    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
 
 call plug#end()
@@ -107,32 +98,6 @@ map <F7> :NERDTreeToggle<CR>
 " Tagbar
 nmap <F8> :TagbarToggle<CR>
 
-" AirLine
-set laststatus=2
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#show_tabs = 1
-let g:airline#extensions#tabline#exclude_preview = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline#extensions#tabline#buffer_nr_show = 1
-let g:airline_left_sep=''
-let g:airline_right_sep=''
-let g:airline_theme='murmur'
-
-" SuperTab
-let g:SuperTabDefaultCompletionType = "<c-y>"
-
-" Ale
-"let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_enter = 0
-
-" CtrlP
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
-    \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
-    \ }
-
 " autoformat
 au BufWrite * :Autoformat " auto format after save
 let g:autoformat_autoindent = 0
@@ -142,8 +107,32 @@ let g:autoformat_remove_trailing_spaces = 1
 " deoplete
 set completeopt-=preview
 set noshowmode
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
-let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
-let g:echodoc_enable_at_startup = 1
 
+" vimtex
+set conceallevel=1
+let g:tex_conceal = ""
+
+" coc.nvim
+" use <tab> for trigger completion and navigate to next complete item
+" use <cr> to confirm
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+let g:coc_snippet_next = '<TAB>'
+let g:coc_snippet_prev = '<S-TAB>'
+
+" lightline
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ }
