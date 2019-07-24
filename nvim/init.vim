@@ -7,6 +7,13 @@
 " Normal
 set nocompatible
 set number
+set number relativenumber
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
+
 filetype plugin on
 filetype indent on
 set autoread
@@ -23,7 +30,8 @@ set shiftwidth=4
 set tabstop=4
 
 set ai "Auto indent
-set wrap "Wrap lines
+set nowrap "Wrap lines
+set wildmenu "wildmenu
 
 let mapleader = ","
 let g:mapleader = ","
@@ -36,8 +44,8 @@ set incsearch
 
 " color
 syntax enable
-colorscheme jellybeans
-set t_Co=256
+set termguicolors
+"set t_Co=256
 " The following provide a transparent background:
 "highlight Comment ctermbg=none
 "highlight Constant ctermbg=none
@@ -52,10 +60,9 @@ set t_Co=256
 "highlight FoldColumn ctermbg=none
 "highlight Title ctermbg=none
 "highlight SignColumn ctermbg=none
-syn match cFunction /\<\w\+\%(\s*(\)\@=/
-hi default link cFunction Include
+"syn match cFunction /\<\w\+\%(\s*(\)\@=/
+"hi default link cFunction Include
 
-set wildmenu
 
 " say goodbye to your arrow keys!
 noremap <Up> <nop>
@@ -75,20 +82,24 @@ tnoremap <Esc> <C-\><C-n>
 """"""""""""""""""""'"""""
 call plug#begin('~/.config/nvim/plugged')
 
-    Plug 'itchyny/lightline.vim'
-    Plug 'scrooloose/nerdcommenter'
-    Plug 'scrooloose/nerdtree'
-    Plug 'majutsushi/tagbar'
-    Plug 'jiangmiao/auto-pairs'
+    Plug 'itchyny/lightline.vim' " status line
+    Plug 'scrooloose/nerdcommenter' " comment
+    Plug 'scrooloose/nerdtree' " file manager
+    Plug 'majutsushi/tagbar' " c tags
+    Plug 'jiangmiao/auto-pairs' " auto pairs
 
-    Plug 'Chiel92/vim-autoformat'
-    Plug 'Yggdroot/indentLine'
-    Plug 'sheerun/vim-polyglot'
+    Plug '/bin/fzf'
+    Plug 'junegunn/fzf.vim'
+
+    Plug 'Chiel92/vim-autoformat' " auto format file
+    Plug 'Yggdroot/indentLine' " add vertical lines
+    Plug 'sheerun/vim-polyglot' " syntax enhancement
 
     " syntax check and complete
-    Plug 'lervag/vimtex'
-    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}} " completion
 
+    " color
+    Plug 'nanotech/jellybeans.vim'
 
 call plug#end()
 
@@ -107,10 +118,6 @@ let g:autoformat_remove_trailing_spaces = 1
 " deoplete
 set completeopt-=preview
 set noshowmode
-
-" vimtex
-set conceallevel=1
-let g:tex_conceal = ""
 
 " coc.nvim
 " use <tab> for trigger completion and navigate to next complete item
@@ -132,7 +139,13 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR
 let g:coc_snippet_next = '<TAB>'
 let g:coc_snippet_prev = '<S-TAB>'
 
+" set color
+colorscheme jellybeans
+
 " lightline
 let g:lightline = {
-      \ 'colorscheme': 'wombat',
+      \ 'colorscheme': 'jellybeans',
       \ }
+
+" fzf.vim
+nnoremap <silent> <leader>f :Files<cr>
