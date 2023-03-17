@@ -1,0 +1,300 @@
+#Author : wlh       https://github.com/wlh320/wlh-dotfiles
+#鸣谢   : 修改自 oh-my-i3 github: https://github.com/ID1258/oh-my-i3.git
+
+############################# 工作区 ###############################
+# => 设定mod键与工作区名
+set $mod  Mod4
+set $WS1  "1"
+set $WS2  "2"
+set $WS3  "3"
+set $WS4  "4"
+set $WS5  "5"
+set $WS6  "6"
+set $WS7  "7"
+set $WS8  "8"
+set $WS9  "9"
+set $WS0  "0"
+
+# => 工作区切换
+# 自动切换到新打开的窗口
+focus_on_window_activation smart
+# 重复切换到当前工作区时会返回上一个所在工作区
+workspace_auto_back_and_forth yes
+
+bindsym $mod+1 workspace $WS1
+bindsym $mod+2 workspace $WS2
+bindsym $mod+3 workspace $WS3
+bindsym $mod+4 workspace $WS4
+bindsym $mod+5 workspace $WS5
+bindsym $mod+6 workspace $WS6
+bindsym $mod+7 workspace $WS7
+bindsym $mod+8 workspace $WS8
+bindsym $mod+9 workspace $WS9
+bindsym $mod+0 workspace $WS0
+
+# => 切换到相邻工作区
+bindsym $mod+Left workspace prev_on_output
+bindsym $mod+Right workspace next_on_output
+
+# => 移动窗口到另一个工作区
+bindsym $mod+shift+1 move container to workspace $WS1, workspace $WS1
+bindsym $mod+shift+2 move container to workspace $WS2, workspace $WS2
+bindsym $mod+shift+3 move container to workspace $WS3, workspace $WS3
+bindsym $mod+shift+4 move container to workspace $WS4, workspace $WS4
+bindsym $mod+shift+5 move container to workspace $WS5, workspace $WS5
+bindsym $mod+shift+6 move container to workspace $WS6, workspace $WS6
+bindsym $mod+shift+7 move container to workspace $WS7, workspace $WS7
+bindsym $mod+shift+8 move container to workspace $WS8, workspace $WS8
+bindsym $mod+shift+9 move container to workspace $WS9, workspace $WS9
+bindsym $mod+shift+0 move container to workspace $WS0, workspace $WS0
+
+workspace $WS1 output HDMI1
+workspace $WS2 output HDMI1
+workspace $WS3 output HDMI1
+workspace $WS4 output HDMI1
+workspace $WS5 output DP2
+workspace $WS6 output DP2
+workspace $WS7 output DP2
+workspace $WS8 output DP2
+
+############################# 窗口管理 ###############################
+
+# => 自定义窗口（支持定义边框类型，窗口布局，大小调整，自动归类工作区等等，多个定义用,隔开）
+# for_window [class="(?i)dolphin"] layout tabbed
+# for_window [class="(?i)pcmanfm"] layout tabbed
+# for_window [class="(?i)firefox"] layout tabbed
+
+#弹出的窗口统一设置成浮动类型
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [class="(?i)ksysguard"] floating enable
+for_window [class="(?i)spotify"] floating enable
+for_window [class="(?i)dolphin"] floating enable
+for_window [class="(?i)copyq"] floating enable
+
+# => 窗口边框类型（边框类型有normal正常/none无边框/pixel 1 自定义宽度）
+# 默认普通窗口的边框类型
+new_window pixel 1
+# 默认浮动窗口的边框类型
+new_float normal
+# 取消工作区边缘的边框
+hide_edge_borders both
+# 在三种边框类型中切换
+bindsym $mod+b border toggle
+
+# => 新建窗口的分割方向
+bindsym $mod+s split h
+bindsym $mod+v split v
+bindsym $mod+t split toggle
+
+# => 移动窗口
+bindsym $mod+Shift+h  move left
+bindsym $mod+Shift+j  move down
+bindsym $mod+Shift+k    move up
+bindsym $mod+Shift+l move right
+
+# => 调整窗口大小
+bindsym $mod+Shift+Left  resize shrink width 10 px or 1 ppt
+bindsym $mod+Shift+Down  resize shrink height 10 px or 1 ppt
+bindsym $mod+Shift+Up    resize grow height 10 px or 1 ppt
+bindsym $mod+Shift+Right resize grow width  10 px or 1 ppt
+
+# => 关闭窗口
+bindsym $mod+q kill
+
+# => 焦点切换
+# 焦点跟随鼠标移动
+focus_follows_mouse yes
+# 焦点切换到父窗口
+bindsym $mod+p focus parent
+# 焦点切换回子窗口
+bindsym $mod+Shift+p focus child
+# 焦点切换到浮动窗口
+bindsym $mod+Shift+space focus mode_toggle
+
+# 窗口聚焦
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# 鼠标操作
+## 默认设置中，左键拖动移动窗口，右键拖动调整窗口大小
+
+## 鼠标滚轮切换窗口和工作区
+bindsym --whole-window --border $mod+button4 focus left
+bindsym --whole-window --border $mod+button5 focus right
+bindsym --whole-window --border $mod+shift+button4 workspace prev
+bindsym --whole-window --border $mod+shift+button5 workspace next
+
+## 鼠标中键单击将窗口变为浮动
+bindsym --whole-window --border $mod+button2 floating toggle
+
+# 聚焦到urgent窗口
+bindsym $mod+u [urgent=latest] focus
+
+# 窗口拖拽 alt+鼠标
+floating_modifier $mod
+
+# 切换到堆叠布局
+bindsym $mod+z layout stacking
+# 切换到标签布局
+bindsym $mod+x layout tabbed
+# 切换到平铺布局（竖直/水平）
+bindsym $mod+c layout toggle split
+
+# 在所有布局中轮回切换
+# bindsym $mod+x layout toggle all
+# 窗口切换到全屏
+bindsym $mod+f fullscreen toggle
+# 窗口切换到浮动
+bindsym $mod+space floating toggle
+# 窗口切换为粘滞
+bindsym $mod+g sticky toggle
+
+# => 暂存窗口（额外的可隐藏浮动窗口，取消浮动还原成普通窗口）
+# 转换普通窗口为暂存窗口
+bindsym $mod+Shift+minus move scratchpad
+# 呼出/隐藏暂存窗口
+bindsym $mod+minus scratchpad show
+
+############################# 快捷键 ###############################
+
+# => 重新载入（更改配置文件后只须重载即可生效，不包含自启部分）
+bindsym $mod+Shift+r restart
+
+# 快捷键
+bindsym $mod+r exec --no-startup-id "rofi -show drun -kb-cancel 'Super+r,Escape' -config ~/.config/i3/rofi/config.rasi"
+bindsym $mod+Tab exec --no-startup-id "rofi -show window -kb-cancel 'Super+Tab,Escape' -config ~/.config/i3/rofi/config.rasi"
+
+# 程序启动
+bindsym $mod+Return     exec --no-startup-id alacritty
+bindsym $mod+e          exec --no-startup-id dolphin
+bindsym $mod+n          exec --no-startup-id neovide
+bindsym $mod+Shift+v    exec --no-startup-id copyq toggle
+bindsym ctrl+mod1+Delete     exec --no-startup-id ksysguard
+
+# 快速启动
+set $quick_start 快速启动 (F)irefox (T)elegram (C)ode (S)potify
+bindsym $mod+d mode "$quick_start"
+mode "$quick_start" {
+    bindsym f exec --no-startup-id firefox; mode "default"
+    bindsym t exec --no-startup-id telegram-desktop; mode "default"
+    bindsym c exec --no-startup-id code; mode "default"
+    bindsym s exec --no-startup-id "env LD_PRELOAD=/usr/local/lib/spotify-adblock.so spotify"; mode "default"
+    bindsym q mode "default"
+    bindsym Escape mode "default"
+}
+
+# 浮动窗口终端
+for_window [class="floating_term"] floating enable
+bindsym $mod+Shift+Return exec alacritty --class floating_term
+
+# 截图
+# bindsym Print exec deepin-screenshot -s /home/wlh/Pictures/screenshot/deepin-`date +%y-%m-%d-%T`.png -f
+# bindsym $mod+Print exec deepin-screenshot -s /home/wlh/Pictures/screenshot/deepin-`date +%y-%m-%d-%T`.png
+bindsym Print exec spectacle
+
+# 锁屏
+bindsym ctrl+mod1+l      exec betterlockscreen -l dim
+
+# 系统命令
+set $mode_system  注销(O) 睡眠(S) 关机(P) 重启(R) 取消(Esc)
+bindsym $mod+shift+q mode "$mode_system"
+mode "$mode_system" {
+    bindsym o exec i3-msg exit
+    bindsym p exec systemctl poweroff
+    bindsym s exec systemctl suspend; mode "default"
+    bindsym r exec systemctl reboot
+    bindsym Escape mode "default"
+}
+
+############################# 主题相关 ###############################
+
+# 字体
+font pango:JetBrains Mono 12
+
+# 颜色
+set $red #f38ba8
+set $green #a6e3a1
+set $yellow #f9e2af
+set $blue #89b4fa
+set $sapphire #74c7ec
+set $teal #94e2d5
+set $purple #cba6f7
+set $gray #89b4fa
+set $base #1e1e2e
+
+# class                 border | backgr | text | indicator | child_border
+client.focused          $teal   $teal   $base     $sapphire  $teal
+client.focused_inactive $base   $base   $yellow   $sapphire  $base
+client.unfocused        $base   $base   $yellow   $sapphire  $base
+client.urgent           $red    $red    $white    $red       $red
+
+# polybar
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+
+############################# 开机启动 ###############################
+
+# exec --no-startup-id xrandr --output HDMI1 --mode 2560x1440 --output DP2 --auto --right-of HDMI1
+exec --no-startup-id xrandr --output HDMI1 --auto --output DP2 --auto --right-of HDMI1
+# 键盘速度
+exec --no-startup-id xset r rate 180 45
+# 闲置600秒后黑屏
+exec --no-startup-id xset dpms 600
+
+# 各种程序
+exec --no-startup-id feh --bg-scale /home/wlh/Seafile/Pictures/Wallpapers/island_day_by_arsenixc-d6ctqon.jpg
+exec --no-startup-id /usr/lib/polkit-kde-authentication-agent-1 &
+exec --no-startup-id picom -b
+exec --no-startup-id dunst
+exec --no-startup-id fcitx5
+exec --no-startup-id seafile-applet
+exec --no-startup-id kdeconnect-indicator
+exec --no-startup-id "systemctl start --user redshift"
+exec --no-startup-id flameshot
+exec --no-startup-id mailspring -b
+exec --no-startup-id copyq
+
+############################ i3-gaps #################################
+
+gaps inner 6
+gaps outer 0
+smart_gaps off
+set $mode_gaps Gaps: (o) outer, (i) inner
+set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
+set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
+bindsym $mod+Shift+g mode "$mode_gaps"
+
+mode "$mode_gaps" {
+    bindsym o      mode "$mode_gaps_outer"
+    bindsym i      mode "$mode_gaps_inner"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+mode "$mode_gaps_inner" {
+    bindsym plus  gaps inner current plus 5
+    bindsym minus gaps inner current minus 5
+    bindsym 0     gaps inner current set 0
+
+    bindsym Shift+plus  gaps inner all plus 5
+    bindsym Shift+minus gaps inner all minus 5
+    bindsym Shift+0     gaps inner all set 0
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+mode "$mode_gaps_outer" {
+    bindsym plus  gaps outer current plus 5
+    bindsym minus gaps outer current minus 5
+    bindsym 0     gaps outer current set 0
+
+    bindsym Shift+plus  gaps outer all plus 5
+    bindsym Shift+minus gaps outer all minus 5
+    bindsym Shift+0     gaps outer all set 0
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}

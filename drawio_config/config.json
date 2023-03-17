@@ -1,0 +1,26 @@
+{
+  "customColorSchemes": [
+    [{"fill": "none", "stroke": "none"}]
+  ],
+  "customPresetColors": [
+    "f79862", "f05e23", "be5504"
+  ],
+  "defaultColors": [
+     "f8fafc", "fafafa", "fef2f2", "fff7ed", "fffbeb", "f7fee7", "f0fdf4", "f0fdfa", "f0f9ff", "eff6ff", "eef2ff", "f5f3ff",
+     "f1f5f9", "f4f4f5", "fee2e2", "ffedd5", "fef3c7", "ecfccb", "dcfce7", "ccfbf1", "e0f2fe", "dbeafe", "e0e7ff", "ede9fe",
+     "e2e8f0", "e4e4e7", "fecaca", "fed7aa", "fde68a", "d9f99d", "bbf7d0", "99f6e4", "bae6fd", "bfdbfe", "c7d2fe", "ddd6fe",
+     "cbd5e1", "d4d4d8", "fca5a5", "fdba74", "fcd34d", "bef264", "86efac", "5eead4", "7dd3fc", "93c5fd", "a5b4fc", "c4b5fd",
+     "94a3b8", "a1a1aa", "f87171", "fb923c", "fbbf24", "a3e635", "4ade80", "2dd4bf", "38bdf8", "60a5fa", "818cf8", "a78bfa",
+     "64748b", "71717a", "ef4444", "f97316", "f59e0b", "84cc16", "22c55e", "14b8a6", "0ea5e9", "3b82f6", "6366f1", "8b5cf6",
+     "475569", "52525b", "dc2626", "ea580c", "d97706", "65a30d", "16a34a", "0d9488", "0284c7", "2563eb", "4f46e5", "7c3aed",
+     "334155", "3f3f46", "b91c1c", "c2410c", "b45309", "4d7c0f", "15803d", "0f766e", "0369a1", "1d4ed8", "4338ca", "6d28d9",
+     "1e293b", "27272a", "991b1b", "9a3412", "92400e", "3f6212", "166534", "115e59", "075985", "1e40af", "3730a3", "5b21b6",
+     "0f172a", "18181b", "7f1d1d", "7c2d12", "78350f", "365314", "14532d", "134e4a", "0c4a6e", "1e3a8a", "312e81", "4c1d95",
+
+     "none",   "fefce8", "fef9c3", "fef08a", "fde047", "facc15", "eab308", "ca8a04", "a16207", "854d0e", "713f12", "none",
+     "none",   "ecfeff", "cffafe", "a5f3fc", "67e8f9", "22d3ee", "06b6d4", "0891b2", "0e7490", "155e75", "164e63", "none",
+     "none",   "fdf2f8", "fce7f3", "fbcfe8", "f9a8d4", "f472b6", "ec4899", "db2777", "be185d", "9d174d", "831843", "none",
+     "none",   "fff1f2", "ffe4e6", "fecdd3", "fda4af", "fb7185", "f43f5e", "e11d48", "be123c", "9f1239", "881337", "none",
+     "none",   "faf5ff", "f3e8ff", "e9d5ff", "d8b4fe", "c084fc", "a855f7", "9333ea", "7e22ce", "6b21a8", "581c87", "none"
+    ]
+}
