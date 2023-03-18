@@ -164,6 +164,15 @@ local lualine = {
   'nvim-lualine/lualine.nvim', -- Fancier statusline
   event = "VeryLazy",
   config = function()
+    -- rime-ls status on lualine
+    local function rime_status()
+      if vim.g.rime_enabled then
+        return 'ㄓ'
+      else
+        return ''
+      end
+    end
+
     require('lualine').setup {
       options = {
         icons_enabled = false,
@@ -171,6 +180,9 @@ local lualine = {
         component_separators = '|',
         section_separators = '',
       },
+      sections = {
+        lualine_x = { rime_status, 'encoding', 'fileformat', 'filetype' },
+      }
     }
   end
 }
@@ -678,8 +690,35 @@ local comment = {
 -- Config telescope
 local telescope = {
   'nvim-telescope/telescope.nvim',
+  cmd = "Telescope",
   branch = '0.1.x',
   dependencies = { 'nvim-lua/plenary.nvim' },
+  init = function()
+    -- Keymap for toggling telescope
+    vim.keymap.set('n', '<C-p>', function()
+      local builtin = require('telescope.builtin')
+      vim.fn.system('git rev-parse --is-inside-work-tree')
+      if vim.v.shell_error == 0 then builtin.git_files() else builtin.find_files() end
+    end, { desc = 'Ctrl-P: search editable files' })
+    vim.keymap.set('n', '<leader>?', "<cmd>Telescope old_files<cr>", { desc = '[?] Find recently opened files' })
+    vim.keymap.set('n', '<leader>sb', function()
+      local builtin = require('telescope.builtin')
+      builtin.current_buffer_fuzzy_find(
+        -- You can pass additional configuration to telescope to change theme, layout, etc.
+        require('telescope.themes').get_dropdown { previewer = false }
+      )
+    end, { desc = '[S]earch [B]uffer' })
+    vim.keymap.set('n', '<leader>sf', "<cmd>Telescope find_files<cr>", { desc = '[S]earch [F]iles' })
+    vim.keymap.set('n', '<leader>sh', "<cmd>Telescope help_tags<cr>", { desc = '[S]earch [H]elp' })
+    vim.keymap.set('n', '<leader>sw', "<cmd>Telescope grep_string<cr>", { desc = '[S]earch current [W]ord' })
+    vim.keymap.set('n', '<leader>sg', "<cmd>Telescope live_grep<cr>", { desc = '[S]earch by [G]rep' })
+    vim.keymap.set('n', '<leader>sd', "<cmd>Telescope diagnostics<cr>", { desc = '[S]earch [D]iagnostics' })
+
+    -- LSP keymap
+    vim.keymap.set('n', 'gr', "<cmd>Telescope lsp_references<cr>", { desc = '[G]oto [R]eferences' })
+    vim.keymap.set('n', '<leader>ds', "<cmd>Telescope lsp_document_symbols<cr>", { desc = '[D]ocument [S]ymbols' })
+    vim.keymap.set('n', '<leader>ws', "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", { desc = '[W]orkspace [S]ymbols' })
+  end,
   config = function()
     require('telescope').setup {
       defaults = {
@@ -694,31 +733,6 @@ local telescope = {
 
     -- Enable telescope fzf native, if installed
     pcall(require('telescope').load_extension, 'fzf')
-
-    -- Keymap for toggling telescope
-    local builtin = require('telescope.builtin')
-    vim.keymap.set('n', '<leader>?', builtin.oldfiles, { desc = '[?] Find recently opened files' })
-    -- vim.keymap.set('n', '<leader><space>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-    vim.keymap.set('n', '<leader>sb', function()
-      builtin.current_buffer_fuzzy_find(
-      -- You can pass additional configuration to telescope to change theme, layout, etc.
-        require('telescope.themes').get_dropdown { previewer = false }
-      )
-    end, { desc = '[S]earch [B]uffer' })
-    vim.keymap.set('n', '<C-p>', function()
-      vim.fn.system('git rev-parse --is-inside-work-tree')
-      if vim.v.shell_error == 0 then builtin.git_files() else builtin.find_files() end
-    end, { desc = 'Ctrl-P: search editable files' })
-    vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-    vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-    vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-    vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-    vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-
-    -- LSP keymap
-    vim.keymap.set('n', 'gr', builtin.lsp_references, { desc = '[G]oto [R]eferences' })
-    vim.keymap.set('n', '<leader>ds', builtin.lsp_document_symbols, { desc = '[D]ocument [S]ymbols' })
-    vim.keymap.set('n', '<leader>ws', builtin.lsp_dynamic_workspace_symbols, { desc = '[W]orkspace [S]ymbols' })
   end
 }
 

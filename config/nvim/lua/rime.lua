@@ -4,21 +4,6 @@ function M.setup_rime()
   -- global status
   vim.g.rime_enabled = false
 
-  -- update lualine
-  local function rime_status()
-    if vim.g.rime_enabled then
-      return 'ㄓ'
-    else
-      return ''
-    end
-  end
-
-  require('lualine').setup({
-    sections = {
-      lualine_x = { rime_status, 'encoding', 'fileformat', 'filetype' },
-    }
-  })
-
   -- add rime to lspconfig as a custom server
   local lspconfig = require('lspconfig')
   local configs = require('lspconfig.configs')
@@ -56,8 +41,8 @@ A language server for librime
       )
     end
     -- keymaps for executing command
-    vim.keymap.set('n', '<leader><space>', function() toggle_rime() end)
-    vim.keymap.set('i', '<C-x>', function() toggle_rime() end)
+    vim.keymap.set('n', '<leader><space>', toggle_rime)
+    vim.keymap.set('i', '<C-x>', toggle_rime)
     vim.keymap.set('n', '<leader>rs', function() vim.lsp.buf.execute_command({ command = "rime-ls.sync-user-data" }) end)
   end
 
