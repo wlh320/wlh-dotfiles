@@ -25,9 +25,10 @@ sudo pacman -S i3 polybar alacritty picom dunst rofi feh xorg-xrandr xorg-xset
 - copyq
 - flameshot
 - networkmanager-dmenu-git
+- ttf-twemoji
 
 ```
-paru -S betterlockscreen redshift copyq flameshot networkmanager-dmenu-git
+paru -S betterlockscreen redshift copyq flameshot networkmanager-dmenu-git ttf-twemoji
 ```
 
 ## Neovim

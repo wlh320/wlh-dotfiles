@@ -11,7 +11,9 @@ Old Configs (2017 Version) is [HERE](https://github.com/wlh320/wlh-dotfiles/tree
     - neovim
     - polybar
     - alacritty
+    - fontconfig
 - drawio_config (config for draw.io)
+- rime_config (config for Rime)
 
 ## Features
 
