@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2023-03-17
+-- ver 2023-04-18
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -69,11 +69,11 @@ vim.keymap.set('n', '<leader>Y', '"+Y')
 -- Remap for quick global replacement
 vim.keymap.set('n', '<leader>s', ':%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>')
 
--- use Alt-hjkl to move between windows
-vim.keymap.set('n', '<A-h>', '<C-w>h')
-vim.keymap.set('n', '<A-j>', '<C-w>j')
-vim.keymap.set('n', '<A-k>', '<C-w>k')
-vim.keymap.set('n', '<A-l>', '<C-w>l')
+-- use Ctrl-hjkl to move between windows
+vim.keymap.set('n', '<C-h>', '<C-w>h')
+vim.keymap.set('n', '<C-j>', '<C-w>j')
+vim.keymap.set('n', '<C-k>', '<C-w>k')
+vim.keymap.set('n', '<C-l>', '<C-w>l')
 
 -- keymap for toggle some plugins
 vim.keymap.set('n', '<leader>t', '<cmd>exe v:count1 . "ToggleTerm"<cr>')
@@ -144,20 +144,15 @@ local catppuccin = {
       flavour = 'mocha', -- latte, frappe, macchiato, mocha
       transparent_background = false,
       term_colors = true,
+      custom_highlights = function(colors)
+        return {
+          IndentBlanklineContextChar = { fg = colors.overlay0 },
+        }
+      end
     })
     vim.cmd.colorscheme 'catppuccin'
   end
 }
-
--- local everforest = {
---   'sainnhe/everforest',
---   lazy = false,
---   priority = 1000,
---   config = function ()
---     vim.g.everforest_background = 'hard'
---     vim.cmd.colorscheme 'everforest'
---   end
--- }
 
 -- Config lualine
 local lualine = {
@@ -197,6 +192,7 @@ local indent_blankline = {
     require('indent_blankline').setup {
       char = '┊',
       show_trailing_blankline_indent = false,
+      show_current_context = true,
     }
   end
 }
@@ -483,7 +479,7 @@ local cmp = {
       mapping = cmp.mapping.preset.insert {
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-l>'] = cmp.mapping.complete(),
+        ['<A-l>'] = cmp.mapping.complete(),
         ['<Tab>'] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
@@ -699,7 +695,7 @@ local illuminate = {
 -- Config comment
 local comment = {
     "numToStr/Comment.nvim",
-    keys = { "gc", "gb" },
+    keys = { { "gc", mode = { "n", "v" } }, { "gb", mode = { "n", "v" } } },
     config = function()
       require("Comment").setup()
     end
@@ -758,7 +754,6 @@ local telescope = {
 local lazy_plugins = {
   -- Themes
   catppuccin,
-  -- everforest,
 
   -- UI related
   lualine,

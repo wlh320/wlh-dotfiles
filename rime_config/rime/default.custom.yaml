@@ -2,36 +2,38 @@
 # encoding: utf-8
 
 patch:
+  # rime_ice/default.yaml -> rime_ice_suggestion.yaml
+  __include: rime_ice_suggestion:/
+  __patch:
+    # 方案列表
+    schema_list:
+      - schema: rime_ice
+      - schema: double_pinyin_flypy
 
-  # 方案列表
-  schema_list:
-    - schema: rime_ice
-    - schema: double_pinyin_flypy
+    # 候选词个数
+    menu/page_size: 9
 
-  # 候选词个数
-  menu/page_size: 9
-
-  ascii_composer/switch_key:
-    Caps_Lock: commit_code  # commit_code | commit_text | clear
-    Shift_L: commit_code    # commit_code | commit_text | clear | noop
-    Shift_R: noop           # macOS 不会区分左右 Shift，只需要设置 Shift_L
-    Control_L: noop
-    Control_R: noop
-    Eisu_toggle: clear
+    ascii_composer/switch_key:
+      Caps_Lock: commit_code  # commit_code | commit_text | clear
+      Shift_L: commit_code    # commit_code | commit_text | clear | noop
+      Shift_R: noop           # macOS 不会区分左右 Shift，只需要设置 Shift_L
+      Control_L: noop
+      Control_R: noop
+      Eisu_toggle: clear
 
 
-  # 快捷键
-  key_binder/bindings:
-    # 简繁切换
-    - {when: always, accept: "Control+Shift+4", toggle: traditionalization}
-    # 切换中英文标点
-    - {when: always, accept: "Control+Shift+3", toggle: ascii_punct}
+    # 快捷键
+    key_binder/bindings:
+      # 简繁切换
+      - {when: always, accept: "Control+Shift+4", toggle: traditionalization}
+      # 切换中英文标点
+      - {when: always, accept: "Control+Shift+3", toggle: ascii_punct}
 
-    # emacs_editing:
-    - { when: composing, accept: Control+a, send: Home } # 光标跳转至行首
-    - { when: composing, accept: Control+e, send: End }  # 光标跳转至行尾
+      # emacs_editing:
+      - { when: composing, accept: Control+a, send: Home } # 光标跳转至行首
+      - { when: composing, accept: Control+e, send: End }  # 光标跳转至行尾
 
-    # paging_with_comma_period: 翻页：, .
-    # 需要额外注释掉方案中 recognizer/patterns 下的 url_2 选项（这个会覆盖掉句号的行为）
-    - { when: paging, accept: comma, send: Page_Up }
-    - { when: has_menu, accept: period, send: Page_Down }
+      # paging_with_comma_period: 翻页：, .
+      # 需要额外注释掉方案中 recognizer/patterns 下的 url_2 选项（这个会覆盖掉句号的行为）
+      - { when: paging, accept: comma, send: Page_Up }
+      - { when: has_menu, accept: period, send: Page_Down }
