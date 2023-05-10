@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2023-04-18
+-- ver 2023-05-10
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -353,7 +353,7 @@ local treesitter = {
   config = function()
     require('nvim-treesitter.configs').setup {
       -- Add languages to be installed here that you want installed for treesitter
-      ensure_installed = { 'c', 'cpp', 'go', 'python', 'rust', 'help', 'lua', 'vim' },
+      ensure_installed = { 'c', 'cpp', 'go', 'python', 'rust', 'vimdoc', 'lua', 'vim' },
 
       highlight = { enable = true },
       indent = { enable = true, disable = { 'python' } },
@@ -623,6 +623,8 @@ local lspconfig = {
     -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+    -- force utf-16
+    capabilities.offsetEncoding = { 'utf-16' }
 
     -- Load mason_lspconfig
     local mason_lspconfig = require 'mason-lspconfig'

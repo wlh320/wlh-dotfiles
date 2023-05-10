@@ -1,0 +1,33 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# any
+[*]
+end_of_line = lf
+charset = utf-8
+
+# python
+[*.py]
+indent_style = space
+indent_size = 4
+
+# c/cpp/lua
+[*.{c,cpp,lua}]
+indent_style = space
+indent_size = 2
+
+# makefile
+[Makefile]
+indent_style = tab
+
+# frontend things
+[*.{js,html,css}]
+indent_style = space
+indent_size = 2
+
+# data
+[*.{json,y{a,}ml}]
+indent_style = space
+indent_size = 2
