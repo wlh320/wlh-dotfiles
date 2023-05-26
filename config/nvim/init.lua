@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2023-05-10
+-- ver 2023-05-26
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -238,6 +238,12 @@ local barbar = {
   dependencies = 'nvim-tree/nvim-web-devicons',
   event = "BufAdd",
   config = function()
+    -- set sidebar offset
+    require('barbar').setup {
+      sidebar_filetypes = {
+        NvimTree = { text = 'File Explorer' }
+      }
+    }
     -- move between buffers
     vim.keymap.set('n', '<S-h>', '<cmd>BufferPrevious<cr>')
     vim.keymap.set('n', '<S-l>', '<cmd>BufferNext<cr>')
@@ -251,43 +257,6 @@ local barbar = {
     vim.keymap.set('n', '<leader>bc', '<cmd>BufferClose<cr>')
     vim.keymap.set('n', '<leader>x', '<cmd>BufferClose<cr>')
     vim.keymap.set('n', '<leader>bd', '<cmd>BufferPickDelete<cr>')
-    -- set nvimtree sidebar offset (FIXME: resize not follow mouse click issue #1545)
-    local nvim_tree_events = require('nvim-tree.events')
-    local bufferline_api = require('bufferline.api')
-
-    local function get_tree_size()
-      return require('nvim-tree.view').View.width
-    end
-
-    -- subscribe nvim-tree events
-    nvim_tree_events.subscribe("TreeOpen", function()
-      bufferline_api.set_offset(get_tree_size(), 'File Explorer')
-    end)
-    nvim_tree_events.subscribe("Resize", function()
-      bufferline_api.set_offset(get_tree_size(), 'File Explorer')
-    end)
-    nvim_tree_events.subscribe("TreeClose", function()
-      bufferline_api.set_offset(0)
-    end)
-    -- better Resize event for nvim-tree (with mouse and `<C-w><>` support)
-    if vim.fn.has('nvim-0.9') == 1 then
-      local group = vim.api.nvim_create_augroup("nvim_tree_resize", { clear = true })
-      vim.api.nvim_create_autocmd('WinResized', {
-        group = group,
-        pattern = { "*" },
-        callback = function()
-          local windows = vim.v.event.windows
-          for _, win_id in ipairs(windows) do
-            local buf = vim.api.nvim_win_get_buf(win_id)
-            if buf and vim.bo[buf].filetype == "NvimTree" then
-              local width = vim.api.nvim_win_get_width(win_id)
-              require('nvim-tree.view').resize(width)
-              break
-            end
-          end
-        end,
-      })
-    end
   end
 }
 
