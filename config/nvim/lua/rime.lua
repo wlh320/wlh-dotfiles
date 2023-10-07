@@ -11,9 +11,9 @@ function M.setup_rime()
     configs.rime_ls = {
       default_config = {
         name = "rime_ls",
-        cmd = { 'rime_ls' },
+        -- cmd = { 'rime_ls' },
         -- cmd = { '/home/wlh/coding/rime-ls/target/debug/rime_ls' },
-        -- cmd = { '/home/wlh/coding/rime-ls/target/release/rime_ls' },
+        cmd = { '/home/wlh/coding/rime-ls/target/release/rime_ls' },
         -- cmd = vim.lsp.rpc.connect('127.0.0.1', 9257),
         filetypes = { '*' },
         single_file_support = true,
@@ -57,6 +57,7 @@ A language server for librime
       user_data_dir = "~/.local/share/rime-ls",
       log_dir = "~/.local/share/rime-ls",
       max_candidates = 9,
+      paging_characters = {",", "."},
       trigger_characters = {},
       schema_trigger_character = "&",
       max_tokens = 4,

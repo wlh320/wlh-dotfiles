@@ -189,10 +189,8 @@ local indent_blankline = {
     lazy_load "indent-blankline.nvim"
   end,
   config = function()
-    require('indent_blankline').setup {
-      char = '┊',
-      show_trailing_blankline_indent = false,
-      show_current_context = true,
+    require('ibl').setup {
+      indent = { char = '┊' },
     }
   end
 }
@@ -548,7 +546,7 @@ local lspconfig = {
     -- Setup lsp installed in mason
     'williamboman/mason-lspconfig.nvim',
     -- Useful status updates for LSP
-    { 'j-hui/fidget.nvim', config = true },
+    { 'j-hui/fidget.nvim', branch = 'legacy', config = true },
   },
   config = function()
     -- LSP settings.
