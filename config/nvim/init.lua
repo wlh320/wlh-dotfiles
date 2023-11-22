@@ -34,7 +34,7 @@ vim.o.completeopt = 'menuone,noselect'
 
 -- my custom setting
 vim.opt.cmdheight = 1
-vim.opt.spelllang = "cjk"
+vim.opt.spelllang = "en,cjk"
 vim.opt.relativenumber = true
 vim.wo.cursorline = true
 vim.wo.wrap = false
@@ -473,7 +473,7 @@ local cmp = {
           if entry and entry.source.name == "nvim_lsp"
               and entry.source.source.client.name == "rime_ls" then
             cmp.confirm({
-              behavior = cmp.ConfirmBehavior.Replace,
+              behavior = cmp.ConfirmBehavior.Insert,
               select = true,
             })
           else
@@ -491,7 +491,7 @@ local cmp = {
           else
             if entry ~= nil then
               cmp.confirm({
-                behavior = cmp.ConfirmBehavior.Replace,
+                behavior = cmp.ConfirmBehavior.Insert,
                 select = true
               })
             else
@@ -611,15 +611,16 @@ local lspconfig = {
 
 -- null-ls formatter
 local null_ls = {
-  "jose-elias-alvarez/null-ls.nvim",
+  "nvimtools/none-ls.nvim",
   init = function()
-    lazy_load "null-ls.nvim"
+    lazy_load "none-ls.nvim"
   end,
   config = function()
     local nls = require("null-ls")
     nls.setup({
       sources = {
         nls.builtins.formatting.black,
+        nls.builtins.formatting.latexindent,
         nls.builtins.code_actions.gitsigns,
         nls.builtins.diagnostics.trail_space,
       }
@@ -719,6 +720,27 @@ local telescope = {
   end
 }
 
+-- Config vimtex
+local vimtex = {
+  'lervag/vimtex',
+  ft = 'tex',
+  config = function()
+    vim.g.vimtex_compiler_engine = 'pdflatex'
+    vim.g.vimtex_view_method = 'zathura'
+    vim.g.maplocalleader = ' '
+    local lspconfig = require('lspconfig')
+    -- FIXME loaded only after opening a .tex file
+    lspconfig.texlab.setup {
+      settings = {
+        texlab = {
+          -- note: latexindent can align equal signs with spaces
+          bibtexFormatter = 'latexindent'
+        }
+      }
+    }
+  end,
+}
+
 -- Config Lazy
 local lazy_plugins = {
   -- Themes
@@ -741,6 +763,9 @@ local lazy_plugins = {
   illuminate,
   comment,
   { 'tpope/vim-sleuth', init = function() lazy_load "vim-sleuth" end },
+
+  -- Language specific
+  vimtex,
 
   -- Fuzzy Finder (files, lsp, etc)
   telescope,
