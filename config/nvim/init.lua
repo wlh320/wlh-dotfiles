@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2023-05-26
+-- ver 2023-11-22
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -67,7 +67,7 @@ vim.keymap.set('v', '<leader>y', '"+y')
 vim.keymap.set('n', '<leader>Y', '"+Y')
 
 -- Remap for quick global replacement
-vim.keymap.set('n', '<leader>s', ':%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>')
+vim.keymap.set('n', '<leader>s', ':%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>', { desc = 'Quick [S]witch'})
 
 -- use Ctrl-hjkl to move between windows
 vim.keymap.set('n', '<C-h>', '<C-w>h')
@@ -76,10 +76,10 @@ vim.keymap.set('n', '<C-k>', '<C-w>k')
 vim.keymap.set('n', '<C-l>', '<C-w>l')
 
 -- keymap for toggle some plugins
-vim.keymap.set('n', '<leader>t', '<cmd>exe v:count1 . "ToggleTerm"<cr>')
-vim.keymap.set('n', '<leader>T', '<cmd>exe v:count1 . "ToggleTerm direction=vertical"<cr>')
-vim.keymap.set('n', '<C-t>', '<cmd>exe v:count1 . "ToggleTerm direction=float"<cr>')
-vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<cr>')
+vim.keymap.set('n', '<leader>t', '<cmd>exe v:count1 . "ToggleTerm"<cr>', { desc = '[t]erminal' })
+vim.keymap.set('n', '<leader>T', '<cmd>exe v:count1 . "ToggleTerm direction=vertical"<cr>', { desc = '[T]erminal Vertical'})
+vim.keymap.set('n', '<C-t>', '<cmd>exe v:count1 . "ToggleTerm direction=float"<cr>', { desc = '[t]erminal floating' })
+vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<cr>', { desc = 'Toggle File [E]xplorer' })
 
 -- Highlight on yank
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -243,18 +243,18 @@ local barbar = {
       }
     }
     -- move between buffers
-    vim.keymap.set('n', '<S-h>', '<cmd>BufferPrevious<cr>')
-    vim.keymap.set('n', '<S-l>', '<cmd>BufferNext<cr>')
-    vim.keymap.set('n', '<leader>bp', '<cmd>BufferPick<cr>')
-    vim.keymap.set('n', '<leader>b1', '<cmd>BufferGoto 1<cr>')
-    vim.keymap.set('n', '<leader>b2', '<cmd>BufferGoto 2<cr>')
-    vim.keymap.set('n', '<leader>b3', '<cmd>BufferGoto 3<cr>')
-    vim.keymap.set('n', '<leader>b4', '<cmd>BufferGoto 4<cr>')
-    vim.keymap.set('n', '<leader>b5', '<cmd>BufferGoto 5<cr>')
+    vim.keymap.set('n', '<S-h>', '<cmd>BufferPrevious<cr>', { desc = 'Previous Buffer'})
+    vim.keymap.set('n', '<S-l>', '<cmd>BufferNext<cr>', { desc = 'Next Buffer' })
+    vim.keymap.set('n', '<leader>bp', '<cmd>BufferPick<cr>', { desc = '[B]uffer [P]ick' })
+    vim.keymap.set('n', '<leader>b1', '<cmd>BufferGoto 1<cr>', { desc = '[B]uffer 1'})
+    vim.keymap.set('n', '<leader>b2', '<cmd>BufferGoto 2<cr>', { desc = '[B]uffer 2'})
+    vim.keymap.set('n', '<leader>b3', '<cmd>BufferGoto 3<cr>', { desc = '[B]uffer 3'})
+    vim.keymap.set('n', '<leader>b4', '<cmd>BufferGoto 4<cr>', { desc = '[B]uffer 4'})
+    vim.keymap.set('n', '<leader>b5', '<cmd>BufferGoto 5<cr>', { desc = '[B]uffer 5'})
     -- close buffers
-    vim.keymap.set('n', '<leader>bc', '<cmd>BufferClose<cr>')
-    vim.keymap.set('n', '<leader>x', '<cmd>BufferClose<cr>')
-    vim.keymap.set('n', '<leader>bd', '<cmd>BufferPickDelete<cr>')
+    vim.keymap.set('n', '<leader>bc', '<cmd>BufferClose<cr>', { desc = '[B]uffer [C]lose'})
+    vim.keymap.set('n', '<leader>x', '<cmd>BufferClose<cr>', { desc = '[B]uffer [X]'})
+    vim.keymap.set('n', '<leader>bd', '<cmd>BufferPickDelete<cr>', { desc = '[B]uffer [D]elete'})
   end
 }
 
@@ -303,6 +303,27 @@ local nvimtree = {
         }
       }
     })
+  end
+}
+
+-- Config whichkey
+local whichkey = {
+  "folke/which-key.nvim",
+  event = "VeryLazy",
+  init = function()
+    vim.o.timeout = true
+    vim.o.timeoutlen = 300
+  end,
+  config = function()
+    local wk = require("which-key")
+    wk.register({
+      b = { name = "Buffer" },
+      d = { name = "Diagnostic" },
+      g = { name = "Gitsigns" },
+      w = { name = "Workspace" },
+      r = { name = "Rime" },
+      l = { name = "LaTeX" },
+    }, { prefix = "<leader>" })
   end
 }
 
@@ -381,8 +402,8 @@ local treesitter = {
     -- Diagnostic keymaps
     vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
     vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-    vim.keymap.set('n', '<leader>df', vim.diagnostic.open_float) -- diagnostic float
-    vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist) -- diagnostic quickfix
+    vim.keymap.set('n', '<leader>df', vim.diagnostic.open_float, { desc = '[D]iagnostic [F]loat' })
+    vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist, { desc = '[D]iagnostic [Q]uickfix'})
   end
 }
 
@@ -444,13 +465,15 @@ local cmp = {
         }
       },
       mapping = cmp.mapping.preset.insert {
+        ['<C-n>'] = cmp.mapping.select_next_item(),
+        ['<C-p>'] = cmp.mapping.select_prev_item(),
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<A-l>'] = cmp.mapping.complete(),
         ['<Tab>'] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
-          elseif luasnip.expand_or_jumpable() then
+          elseif luasnip.expand_or_locally_jumpable() then
             luasnip.expand_or_jump()
           else
             fallback()
@@ -459,7 +482,7 @@ local cmp = {
         ['<S-Tab>'] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_prev_item()
-          elseif luasnip.jumpable(-1) then
+          elseif luasnip.locally_jumpable(-1) then
             luasnip.jump(-1)
           else
             fallback()
@@ -546,7 +569,7 @@ local lspconfig = {
     -- Setup lsp installed in mason
     'williamboman/mason-lspconfig.nvim',
     -- Useful status updates for LSP
-    { 'j-hui/fidget.nvim', branch = 'legacy', config = true },
+    { 'j-hui/fidget.nvim', config = true },
   },
   config = function()
     -- LSP settings.
@@ -676,7 +699,15 @@ local telescope = {
   'nvim-telescope/telescope.nvim',
   cmd = "Telescope",
   branch = '0.1.x',
-  dependencies = { 'nvim-lua/plenary.nvim' },
+  dependencies = {
+    'nvim-lua/plenary.nvim',
+    {
+      -- Fuzzy Finder Algorithm which requires local dependencies to be built.
+      'nvim-telescope/telescope-fzf-native.nvim',
+      build = 'make',
+      cond = function() return vim.fn.executable 'make' == 1 end,
+    },
+  },
   init = function()
     -- Keymap for toggling telescope
     vim.keymap.set('n', '<C-p>', function()
@@ -684,7 +715,7 @@ local telescope = {
       vim.fn.system('git rev-parse --is-inside-work-tree')
       if vim.v.shell_error == 0 then builtin.git_files() else builtin.find_files() end
     end, { desc = 'Ctrl-P: search editable files' })
-    vim.keymap.set('n', '<leader>?', "<cmd>Telescope old_files<cr>", { desc = '[?] Find recently opened files' })
+    vim.keymap.set('n', '<leader>?', "<cmd>Telescope oldfiles<cr>", { desc = 'Find recent files' })
     vim.keymap.set('n', '<leader>sb', function()
       local builtin = require('telescope.builtin')
       builtin.current_buffer_fuzzy_find(
@@ -753,6 +784,7 @@ local lazy_plugins = {
   barbar,
   toggleterm,
   nvimtree,
+  whichkey,
 
   -- Coding
   treesitter,
@@ -769,8 +801,6 @@ local lazy_plugins = {
 
   -- Fuzzy Finder (files, lsp, etc)
   telescope,
-  -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
-  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make', cond = vim.fn.executable 'make' == 1 },
 }
 
 local lazy_config = {

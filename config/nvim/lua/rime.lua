@@ -41,9 +41,11 @@ A language server for librime
       )
     end
     -- keymaps for executing command
-    vim.keymap.set('n', '<leader><space>', toggle_rime)
-    vim.keymap.set('i', '<C-x>', toggle_rime)
-    vim.keymap.set('n', '<leader>rs', function() vim.lsp.buf.execute_command({ command = "rime-ls.sync-user-data" }) end)
+    vim.keymap.set('n', '<leader><space>', toggle_rime, { desc = 'Toggle Rime' })
+    vim.keymap.set('i', '<C-x>', toggle_rime, { desc = 'Toggle Rime' })
+    vim.keymap.set('n', '<leader>rs',
+      function() vim.lsp.buf.execute_command({ command = "rime-ls.sync-user-data" }) end,
+      { desc = '[R]ime [S]ync' })
   end
 
   -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
