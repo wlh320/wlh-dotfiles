@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2023-11-22
+-- ver 2023-11-28
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -625,6 +625,19 @@ local lspconfig = {
           on_attach = on_attach,
         }
       end,
+      -- dedicated handler
+      ["texlab"] = function()
+        require('lspconfig').texlab.setup {
+          capabilities = capabilities,
+          on_attach = on_attach,
+          settings = {
+            texlab = {
+              -- I prefer formatting bibtex file with latexindent
+              bibtexFormatter = 'latexindent'
+            }
+          }
+        }
+      end
     }
 
     -- My rime-ls settings
@@ -754,21 +767,11 @@ local telescope = {
 -- Config vimtex
 local vimtex = {
   'lervag/vimtex',
-  ft = 'tex',
+  lazy = false,
   config = function()
     vim.g.vimtex_compiler_engine = 'pdflatex'
     vim.g.vimtex_view_method = 'zathura'
     vim.g.maplocalleader = ' '
-    local lspconfig = require('lspconfig')
-    -- FIXME loaded only after opening a .tex file
-    lspconfig.texlab.setup {
-      settings = {
-        texlab = {
-          -- note: latexindent can align equal signs with spaces
-          bibtexFormatter = 'latexindent'
-        }
-      }
-    }
   end,
 }
 
