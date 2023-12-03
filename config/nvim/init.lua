@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2023-11-28
+-- ver 2023-12-03
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -602,12 +602,6 @@ local lspconfig = {
       nmap('<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
       end, '[W]orkspace [L]ist Folders')
-
-      -- Create a command `:Format` local to the LSP buffer
-      vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-        vim.lsp.buf.format()
-      end, { desc = 'Format current buffer with LSP' })
-      vim.keymap.set('n', '<Leader>f', ":Format<cr>")
     end
 
     -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
@@ -645,21 +639,26 @@ local lspconfig = {
   end
 }
 
--- null-ls formatter
-local null_ls = {
-  "nvimtools/none-ls.nvim",
-  init = function()
-    lazy_load "none-ls.nvim"
-  end,
+-- Config conform.nvim
+local conform = {
+  'stevearc/conform.nvim',
+  event = { "BufWritePre" },
+  cmd = { "ConformInfo" },
+  keys = {
+    {
+      "<leader>f",
+      function() require("conform").format({ async = true, lsp_fallback = true }) end,
+      mode = "",
+      desc = "[F]ormat buffer",
+    },
+  },
   config = function()
-    local nls = require("null-ls")
-    nls.setup({
-      sources = {
-        nls.builtins.formatting.black,
-        nls.builtins.formatting.latexindent,
-        nls.builtins.code_actions.gitsigns,
-        nls.builtins.diagnostics.trail_space,
-      }
+    require("conform").setup({
+      formatters_by_ft = {
+        python = { "black" },
+        tex = { "latexindent" },
+        ["_"] = { "trim_whitespace" },
+      },
     })
   end,
 }
@@ -794,7 +793,7 @@ local lazy_plugins = {
   cmp,
   mason,
   lspconfig,
-  null_ls,
+  conform,
   illuminate,
   comment,
   { 'tpope/vim-sleuth', init = function() lazy_load "vim-sleuth" end },

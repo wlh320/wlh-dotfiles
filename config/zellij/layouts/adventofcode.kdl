@@ -1,0 +1,31 @@
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=1 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+
+    tab name="main" hide_floating_panes=true cwd="~/coding/shuaOJ/AdventOfCode/2023" {
+        pane split_direction="vertical" {
+            pane size="60%" {
+                name "nvim"
+                command "nvim"
+            }
+            pane split_direction="horizontal" size="40%" {
+                pane name="data"
+                pane name="run" {
+                    command "python"
+                    args "solve.py"
+                }
+            }
+        }
+
+        floating_panes {
+            pane command="python" name="python"
+        }
+    }
+}
