@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2023-12-03
+-- ver 2023-12-19
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -225,6 +225,7 @@ local gitsigns = {
     }
     -- keymap for previewing hunks
     vim.keymap.set('n', '<leader>gh', '<cmd>Gitsigns preview_hunk<cr>', { desc = '[G]itsigns preview [H]unks' })
+    vim.keymap.set('n', '<leader>gr', '<cmd>Gitsigns reset_hunk<cr>', { desc = '[G]itsigns [R]eset hunk' })
     vim.keymap.set('n', '<leader>gp', '<cmd>Gitsigns prev_hunk<cr>', { desc = '[G]itsigns [P]revious hunk' })
     vim.keymap.set('n', '<leader>gn', '<cmd>Gitsigns next_hunk<cr>', { desc = '[G]itsigns [N]ext hunk' })
   end
@@ -344,7 +345,7 @@ local treesitter = {
       ensure_installed = { 'c', 'cpp', 'go', 'python', 'rust', 'vimdoc', 'lua', 'vim' },
 
       highlight = { enable = true },
-      indent = { enable = true, disable = { 'python' } },
+      indent = { enable = true },
       incremental_selection = {
         enable = true,
         keymaps = {
