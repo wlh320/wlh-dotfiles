@@ -1,0 +1,25 @@
+import = ["/home/wlh/.config/alacritty/catppuccin.toml"]
+
+[cursor]
+blink_interval = 500
+
+[cursor.style]
+blinking = "On"
+shape = "Beam"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 13.0
+
+[font.normal]
+family = "JetBrains Mono NF"
+style = "Regular"
+
+[window]
+opacity = 1.0
+
+[window.dimensions]
+columns = 100
+lines = 25
