@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2023-12-19
+-- ver 2024-03-08
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -532,6 +532,23 @@ local cmp = {
         { name = 'nvim_lsp_signature_help' }
       },
     }
+
+    -- complete rime candidates with number
+    cmp.event:on('menu_opened', function()
+      entry = cmp.core.view:get_first_entry()
+      if entry and entry.source.name == "nvim_lsp"
+          and entry.source.source.client.name == "rime_ls" then
+        local item = entry:get_completion_item()
+        local label = item.label
+        local pos1, _ = string.find(label, "^%d%.")
+        local pos2, _ = string.find(label, "^[，。《》？；：“”、！（）【】「」〖〗]")
+        if pos1 == nil and pos2 == nil then
+          vim.print('wtf')
+          vim.lsp.util.apply_text_edits({ item.textEdit }, 0, 'utf-16')
+        end
+      end
+    end)
+
     -- forget current snippet after leaving insert mode
     local unlinkgrp = vim.api.nvim_create_augroup(
       'UnlinkSnippetOnModeChange',
@@ -720,6 +737,8 @@ local telescope = {
       build = 'make',
       cond = function() return vim.fn.executable 'make' == 1 end,
     },
+    -- better selection ui
+    { 'nvim-telescope/telescope-ui-select.nvim' },
   },
   init = function()
     -- Keymap for toggling telescope
@@ -757,10 +776,16 @@ local telescope = {
           },
         },
       },
+      extensions = {
+        ['ui-select'] = {
+          require('telescope.themes').get_dropdown()
+        }
+      }
     }
 
     -- Enable telescope fzf native, if installed
     pcall(require('telescope').load_extension, 'fzf')
+    pcall(require('telescope').load_extension, 'ui-select')
   end
 }
 
