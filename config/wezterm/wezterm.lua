@@ -21,7 +21,7 @@ config.use_fancy_tab_bar = false
 -- config.integrated_title_buttons = { 'Close', 'Maximize', 'Hide' }
 
 -- font
-config.font = wezterm.font("JetBrains Mono", { weight = "Regular" })
+config.font = wezterm.font("JetBrains Mono NF", { weight = "Regular" })
 config.font_size = 14.0
 
 -- color
