@@ -4,8 +4,7 @@ local config = wezterm.config_builder()
 -- window
 config.initial_rows = 25
 config.initial_cols = 100
-config.enable_scroll_bar = true
-config.scrollback_lines = 5000
+config.adjust_window_size_when_changing_font_size = false
 config.window_padding = {
   left = 0,
   right = 0,
@@ -15,14 +14,21 @@ config.window_padding = {
 config.window_background_opacity = 0.95
 config.text_background_opacity = 0.95
 
+config.enable_scroll_bar = true
+config.scrollback_lines = 5000
+
 config.use_fancy_tab_bar = false
 -- config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
 -- config.integrated_title_button_alignment = "Left"
 -- config.integrated_title_buttons = { 'Close', 'Maximize', 'Hide' }
 
 -- font
-config.font = wezterm.font("JetBrains Mono NF", { weight = "Regular" })
 config.font_size = 14.0
+config.font = wezterm.font_with_fallback {
+  { family = "JetBrains Mono NF", weight = "Regular" },
+  { family = "MiSans", weight = "Regular" },
+  'Twemoji'
+}
 
 -- color
 config.color_scheme = "Catppuccin Mocha"

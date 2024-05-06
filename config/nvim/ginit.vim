@@ -5,7 +5,7 @@ if vim.fn.exists("g:neovide") == 1 then
   vim.g.neovide_transparency = 0.98
   vim.g.neovide_floating_blur_amount_x = 2.0
   vim.g.neovide_floating_blur_amount_y = 2.0
-  vim.opt.guifont = { "JetBrains Mono", ":h12" }
+  vim.opt.guifont = { "JetBrains Mono,LXGW WenKai Mono", ":h16" }
 end
 
 -- config fvim
