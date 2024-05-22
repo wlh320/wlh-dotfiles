@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2024-05-06
+-- ver 2024-05-22
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -82,43 +82,14 @@ vim.keymap.set('n', '<C-t>', '<cmd>exe v:count1 . "ToggleTerm direction=float"<c
 vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<cr>', { desc = 'Toggle File [E]xplorer' })
 
 -- Highlight on yank
-local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
+  group = vim.api.nvim_create_augroup('YankHighlight', { clear = true }),
   callback = function()
     vim.highlight.on_yank()
   end,
-  group = highlight_group,
-  pattern = '*',
 })
 
 -- [[ Plugin Settings ]]
-
--- Copy from NvChad lazy_load function
-local lazy_load = function(plugin)
-  vim.api.nvim_create_autocmd({ "BufRead", "BufWinEnter", "BufNewFile" }, {
-    group = vim.api.nvim_create_augroup("BeLazyOnFileOpen" .. plugin, {}),
-    callback = function()
-      local file = vim.fn.expand "%"
-      local condition = file ~= "NvimTree_1" and file ~= "[lazy]" and file ~= ""
-
-      if condition then
-        vim.api.nvim_del_augroup_by_name("BeLazyOnFileOpen" .. plugin)
-        -- dont defer for treesitter as it will show slow highlighting
-        -- This deferring only happens only when we do "nvim filename"
-        if plugin ~= "nvim-treesitter" then
-          vim.schedule(function()
-            require("lazy").load { plugins = plugin }
-            if plugin == "nvim-lspconfig" then
-              vim.cmd "silent! do FileType"
-            end
-          end)
-        else
-          require("lazy").load { plugins = plugin }
-        end
-      end
-    end,
-  })
-end
 
 -- Install lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -185,12 +156,15 @@ local lualine = {
 -- Config indent_blankline
 local indent_blankline = {
   'lukas-reineke/indent-blankline.nvim',
-  init = function()
-    lazy_load "indent-blankline.nvim"
-  end,
+  event = "LazyFile",
   config = function()
     require('ibl').setup {
       indent = { char = '┊' },
+      exclude = {
+        filetypes = {
+          "toggleterm",
+        }
+      }
     }
   end
 }
@@ -198,21 +172,7 @@ local indent_blankline = {
 -- Config gitsigns
 local gitsigns = {
   'lewis6991/gitsigns.nvim',
-  init = function()
-    -- load gitsigns only when a git file is opened
-    vim.api.nvim_create_autocmd({ "BufRead" }, {
-      group = vim.api.nvim_create_augroup("GitSignsLazyLoad", { clear = true }),
-      callback = function()
-        vim.fn.system("git -C " .. vim.fn.expand "%:p:h" .. " rev-parse")
-        if vim.v.shell_error == 0 then
-          vim.api.nvim_del_augroup_by_name "GitSignsLazyLoad"
-          vim.schedule(function()
-            require("lazy").load { plugins = { "gitsigns.nvim" } }
-          end)
-        end
-      end,
-    })
-  end,
+  event = "LazyFile",
   config = function()
     require('gitsigns').setup {
       signs = {
@@ -331,14 +291,10 @@ local whichkey = {
 -- Config treesitter
 local treesitter = {
   'nvim-treesitter/nvim-treesitter',
-  init = function()
-    lazy_load "nvim-treesitter"
-  end,
+  event = { "LazyFile", "VeryLazy" },
   dependencies = 'nvim-treesitter/nvim-treesitter-textobjects',
   cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
-  build = function()
-    pcall(require('nvim-treesitter.install').update { with_sync = true })
-  end,
+  build = ":TSUpdate",
   config = function()
     require('nvim-treesitter.configs').setup {
       -- Add languages to be installed here that you want installed for treesitter
@@ -564,9 +520,7 @@ local mason = {
 -- Config LSP
 local lspconfig = {
   'neovim/nvim-lspconfig',
-  init = function()
-    lazy_load "nvim-lspconfig"
-  end,
+  event = "LazyFile",
   dependencies = {
     -- Setup lsp installed in mason
     'williamboman/mason-lspconfig.nvim',
@@ -676,9 +630,7 @@ local conform = {
 -- Config illuminate
 local illuminate = {
   'RRethy/vim-illuminate',
-  init = function()
-    lazy_load "vim-illuminate"
-  end,
+  event = "LazyFile",
   config = function()
     require("illuminate").configure({
       delay = 200,
@@ -814,7 +766,7 @@ local lazy_plugins = {
   conform,
   illuminate,
   comment,
-  { 'tpope/vim-sleuth', init = function() lazy_load "vim-sleuth" end },
+  { 'tpope/vim-sleuth', event = "LazyFile" },
 
   -- Language specific
   vimtex,
@@ -827,7 +779,43 @@ local lazy_config = {
   defaults = { lazy = true },
 }
 
+-- Copy from LazyVim
+local lazy_file = function ()
+  -- This autocmd will only trigger when a file was loaded from the cmdline.
+  -- It will render the file as quickly as possible.
+  vim.api.nvim_create_autocmd("BufReadPost", {
+    once = true,
+    callback = function(event)
+      -- Skip if we already entered vim
+      if vim.v.vim_did_enter == 1 then
+        return
+      end
+
+      -- Try to guess the filetype (may change later on during Neovim startup)
+      local ft = vim.filetype.match({ buf = event.buf })
+      if ft then
+        -- Add treesitter highlights and fallback to syntax
+        local lang = vim.treesitter.language.get_lang(ft)
+        if not (lang and pcall(vim.treesitter.start, event.buf, lang)) then
+          vim.bo[event.buf].syntax = ft
+        end
+
+        -- Trigger early redraw
+        vim.cmd([[redraw]])
+      end
+    end,
+  })
+
+  -- Add support for the LazyFile event
+  local Event = require("lazy.core.handler.event")
+  local lazy_file_events = { "BufReadPost", "BufNewFile", "BufWritePre" }
+  Event.mappings.LazyFile = { id = "LazyFile", event = lazy_file_events }
+  Event.mappings["User LazyFile"] = Event.mappings.LazyFile
+end
+lazy_file()
+
 require('lazy').setup(lazy_plugins, lazy_config)
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
