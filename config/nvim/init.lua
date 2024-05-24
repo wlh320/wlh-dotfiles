@@ -367,6 +367,7 @@ local treesitter = {
 -- Config nvim-cmp
 local cmp = {
   'hrsh7th/nvim-cmp',
+  version = false,
   event = "InsertEnter",
   dependencies = {
     {
@@ -374,16 +375,6 @@ local cmp = {
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-nvim-lsp-signature-help',
-      'saadparwaiz1/cmp_luasnip',
-    },
-    { -- Config luasnip
-      'L3MON4D3/LuaSnip',
-      dependencies = {
-        'rafamadriz/friendly-snippets',
-        config = function()
-          require('luasnip.loaders.from_vscode').lazy_load()
-        end,
-      },
     },
     { -- Config autopairs
       "windwp/nvim-autopairs",
@@ -401,14 +392,8 @@ local cmp = {
   config = function()
     local cmp = require 'cmp'
     local compare = require 'cmp.config.compare'
-    local luasnip = require 'luasnip'
 
     cmp.setup {
-      snippet = {
-        expand = function(args)
-          luasnip.lsp_expand(args.body)
-        end,
-      },
       sorting = {
         comparators = {
           compare.sort_text,
@@ -430,8 +415,8 @@ local cmp = {
         ['<Tab>'] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
-          elseif luasnip.expand_or_locally_jumpable() then
-            luasnip.expand_or_jump()
+          elseif vim.snippet.active({ direction = 1 }) then
+            vim.snippet.jump(1)
           else
             fallback()
           end
@@ -439,8 +424,8 @@ local cmp = {
         ['<S-Tab>'] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_prev_item()
-          elseif luasnip.locally_jumpable(-1) then
-            luasnip.jump(-1)
+          elseif vim.snippet.active({ direction = -1 }) then
+            vim.snippet.jump(-1)
           else
             fallback()
           end
@@ -482,31 +467,11 @@ local cmp = {
       },
       sources = {
         { name = 'nvim_lsp' },
-        { name = 'luasnip', keyword_length = 2 },
         { name = 'buffer' },
         { name = 'path' },
         { name = 'nvim_lsp_signature_help' }
       },
     }
-
-    -- forget current snippet after leaving insert mode
-    local unlinkgrp = vim.api.nvim_create_augroup(
-      'UnlinkSnippetOnModeChange',
-      { clear = true }
-    )
-    vim.api.nvim_create_autocmd('ModeChanged', {
-      group = unlinkgrp,
-      pattern = { 's:n', 'i:*' },
-      desc = 'Forget the current snippet when leaving the insert mode',
-      callback = function(event)
-        if luasnip.session
-            and luasnip.session.current_nodes[event.buf]
-            and not luasnip.session.jump_active
-        then
-          luasnip.unlink_current()
-        end
-      end,
-    })
   end
 }
 
@@ -530,7 +495,7 @@ local lspconfig = {
   config = function()
     -- LSP settings.
     --  This function gets run when an LSP connects to a particular buffer.
-    local on_attach = function(_, bufnr)
+    local on_attach = function(client, bufnr)
       -- In this case, we create a function that lets us more easily define mappings specific
       -- for LSP related items. It sets the mode, buffer and description for us each time.
       local nmap = function(keys, func, desc)
@@ -558,6 +523,12 @@ local lspconfig = {
       nmap('<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
       end, '[W]orkspace [L]ist Folders')
+
+      -- inlay hint
+      if client.server_capabilities.inlayHintProvider then
+        vim.lsp.inlay_hint.enable(true)
+      end
+
     end
 
     -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
