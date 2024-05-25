@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2024-05-25
+-- ver 2024-05-26
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -79,7 +79,6 @@ vim.keymap.set('n', '<C-l>', '<C-w>l')
 vim.keymap.set('n', '<leader>t', '<cmd>exe v:count1 . "ToggleTerm"<cr>', { desc = '[t]erminal' })
 vim.keymap.set('n', '<leader>T', '<cmd>exe v:count1 . "ToggleTerm direction=vertical"<cr>', { desc = '[T]erminal Vertical'})
 vim.keymap.set('n', '<C-t>', '<cmd>exe v:count1 . "ToggleTerm direction=float"<cr>', { desc = '[t]erminal floating' })
-vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<cr>', { desc = 'Toggle File [E]xplorer' })
 
 -- Highlight on yank
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -115,11 +114,6 @@ local catppuccin = {
       flavour = 'mocha', -- latte, frappe, macchiato, mocha
       transparent_background = false,
       term_colors = true,
-      custom_highlights = function(colors)
-        return {
-          IndentBlanklineContextChar = { fg = colors.overlay0 },
-        }
-      end
     })
     vim.cmd.colorscheme 'catppuccin'
   end
@@ -138,6 +132,9 @@ local lualine = {
         return ''
       end
     end
+
+    -- global status line because we have winbar now
+    vim.opt.laststatus = 3
 
     require('lualine').setup {
       options = {
@@ -184,10 +181,12 @@ local gitsigns = {
       },
     }
     -- keymap for previewing hunks
+    local gs = require('gitsigns')
+    vim.keymap.set("n", "]h", function() gs.nav_hunk("next") end, { desc = "Next Hunk" })
+    vim.keymap.set("n", "[h", function() gs.nav_hunk("prev") end, { desc = "Prev Hunk" })
+    vim.keymap.set("n", "<leader>gb", function() gs.blame_line({ full = true }) end, { desc = "Blame Line" })
     vim.keymap.set('n', '<leader>gh', '<cmd>Gitsigns preview_hunk<cr>', { desc = '[G]itsigns preview [H]unks' })
     vim.keymap.set('n', '<leader>gr', '<cmd>Gitsigns reset_hunk<cr>', { desc = '[G]itsigns [R]eset hunk' })
-    vim.keymap.set('n', '<leader>gp', '<cmd>Gitsigns prev_hunk<cr>', { desc = '[G]itsigns [P]revious hunk' })
-    vim.keymap.set('n', '<leader>gn', '<cmd>Gitsigns next_hunk<cr>', { desc = '[G]itsigns [N]ext hunk' })
   end
 }
 
@@ -428,6 +427,12 @@ local cmp = {
     local cmp = require 'cmp'
     local compare = require 'cmp.config.compare'
 
+    local has_words_before = function()
+      unpack = unpack or table.unpack
+      local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+      return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+    end
+
     cmp.setup {
       sorting = {
         comparators = {
@@ -446,12 +451,13 @@ local cmp = {
         ['<C-p>'] = cmp.mapping.select_prev_item(),
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<A-l>'] = cmp.mapping.complete(),
         ['<Tab>'] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
           elseif vim.snippet.active({ direction = 1 }) then
             vim.snippet.jump(1)
+          elseif has_words_before() then
+            cmp.complete()
           else
             fallback()
           end
@@ -465,40 +471,10 @@ local cmp = {
             fallback()
           end
         end, { 'i', 's' }),
-        ['<Space>'] = cmp.mapping(function(fallback)
-          local entry = cmp.get_selected_entry()
-          if entry == nil then
-            entry = cmp.core.view:get_first_entry()
-          end
-          if entry and entry.source.name == "nvim_lsp"
-              and entry.source.source.client.name == "rime_ls" then
-            cmp.confirm({
-              behavior = cmp.ConfirmBehavior.Insert,
-              select = true,
-            })
-          else
-            fallback()
-          end
-        end, { 'i', 's' }),
-        ['<CR>'] = cmp.mapping(function(fallback)
-          local entry = cmp.get_selected_entry()
-          if entry == nil then
-            entry = cmp.core.view:get_first_entry()
-          end
-          if entry and entry.source.name == 'nvim_lsp'
-            and entry.source.source.client.name == 'rime_ls' then
-            cmp.abort()
-          else
-            if entry ~= nil then
-              cmp.confirm({
-                behavior = cmp.ConfirmBehavior.Insert,
-                select = true
-              })
-            else
-              fallback()
-            end
-          end
-        end, {'i', 's'}),
+        ['<CR>'] = cmp.mapping.confirm({ 
+          behavior = cmp.ConfirmBehavior.Insert, 
+          select = true
+        })
       },
       sources = {
         { name = 'nvim_lsp' },
@@ -562,6 +538,17 @@ local lspconfig = {
       -- inlay hint
       if client.server_capabilities.inlayHintProvider then
         vim.lsp.inlay_hint.enable(true)
+      end
+
+      -- code lens
+      if client.server_capabilities.codeLensProvider then
+        vim.lsp.codelens.refresh({ bufnr = bufnr })
+        vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
+          buffer = bufnr,
+          callback = function()
+            vim.lsp.codelens.refresh({ bufnr = bufnr })
+          end,
+        })
       end
 
     end
