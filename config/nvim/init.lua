@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2024-05-22
+-- ver 2024-05-25
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -191,34 +191,6 @@ local gitsigns = {
   end
 }
 
--- Config barbar
-local barbar = {
-  'romgrk/barbar.nvim',
-  dependencies = 'nvim-tree/nvim-web-devicons',
-  event = "BufAdd",
-  config = function()
-    -- set sidebar offset
-    require('barbar').setup {
-      sidebar_filetypes = {
-        NvimTree = { text = 'File Explorer' }
-      }
-    }
-    -- move between buffers
-    vim.keymap.set('n', '<S-h>', '<cmd>BufferPrevious<cr>', { desc = 'Previous Buffer'})
-    vim.keymap.set('n', '<S-l>', '<cmd>BufferNext<cr>', { desc = 'Next Buffer' })
-    vim.keymap.set('n', '<leader>bp', '<cmd>BufferPick<cr>', { desc = '[B]uffer [P]ick' })
-    vim.keymap.set('n', '<leader>b1', '<cmd>BufferGoto 1<cr>', { desc = '[B]uffer 1'})
-    vim.keymap.set('n', '<leader>b2', '<cmd>BufferGoto 2<cr>', { desc = '[B]uffer 2'})
-    vim.keymap.set('n', '<leader>b3', '<cmd>BufferGoto 3<cr>', { desc = '[B]uffer 3'})
-    vim.keymap.set('n', '<leader>b4', '<cmd>BufferGoto 4<cr>', { desc = '[B]uffer 4'})
-    vim.keymap.set('n', '<leader>b5', '<cmd>BufferGoto 5<cr>', { desc = '[B]uffer 5'})
-    -- close buffers
-    vim.keymap.set('n', '<leader>bc', '<cmd>BufferClose<cr>', { desc = '[B]uffer [C]lose'})
-    vim.keymap.set('n', '<leader>x', '<cmd>BufferClose<cr>', { desc = '[B]uffer [X]'})
-    vim.keymap.set('n', '<leader>bd', '<cmd>BufferPickDelete<cr>', { desc = '[B]uffer [D]elete'})
-  end
-}
-
 -- Config toggleterm
 local toggleterm = {
   'akinsho/toggleterm.nvim',
@@ -245,26 +217,89 @@ local toggleterm = {
   end
 }
 
--- Config nvim-tree
-local nvimtree = {
-  'nvim-tree/nvim-tree.lua',
-  dependencies = 'nvim-tree/nvim-web-devicons',
-  cmd = { 'NvimTreeToggle', 'NvimTreeFocus' },
+-- Config dropbar
+local dropbar = {
+  'Bekaboo/dropbar.nvim',
+  lazy = false,
+  -- optional, but required for fuzzy finder support
+  dependencies = {
+    'nvim-telescope/telescope-fzf-native.nvim',
+    'nvim-tree/nvim-web-devicons'
+  },
+  opts = {
+    general = {
+      update_interval = 1000 / 35,
+    },
+    bar = {
+      sources = function(buf, _)
+        local sources = require('dropbar.sources')
+        local utils = require('dropbar.utils')
+        if vim.bo[buf].ft == 'markdown' then
+          return {
+            sources.path,
+            sources.markdown,
+          }
+        end
+        if vim.bo[buf].buftype == 'terminal' then
+          return {
+            sources.terminal,
+          }
+        end
+        return {
+          sources.path,
+          utils.source.fallback({
+            sources.lsp
+            -- sources.treesitter, -- no treesitter
+          }),
+        }
+    end,
+    }
+  }
+
+}
+
+-- Config neotree
+local neotree = {
+  "nvim-neo-tree/neo-tree.nvim",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    "nvim-tree/nvim-web-devicons",
+    "MunifTanjim/nui.nvim",
+  },
+  event = "VeryLazy",
+  keys = {
+    { "<leader>e", ":Neotree toggle float<CR>", silent = true, desc = "Float File Explorer" },
+    { "<leader>E", ":Neotree toggle left<CR>", silent = true, desc = "Left File Explorer" },
+  },
   config = function()
-    require('nvim-tree').setup({
-      actions = {
-        change_dir = {
-          enable = true,
-          global = true
-        }
+    require("neo-tree").setup({
+      window = {
+        position = "float",
+        width = 35,
       },
-      renderer = {
-        indent_markers = {
-          enable = true
-        }
-      }
+      source_selector = {
+        winbar = true,
+      },
+      event_handlers = {
+        {
+          event = "neo_tree_window_after_open",
+          handler = function(args)
+            if args.position == "left" or args.position == "right" then
+              vim.cmd("wincmd =")
+            end
+          end,
+        },
+        {
+          event = "neo_tree_window_after_close",
+          handler = function(args)
+            if args.position == "left" or args.position == "right" then
+              vim.cmd("wincmd =")
+            end
+          end,
+        },
+      },
     })
-  end
+  end,
 }
 
 -- Config whichkey
@@ -630,15 +665,6 @@ local illuminate = {
   },
 }
 
--- Config comment
-local comment = {
-    "numToStr/Comment.nvim",
-    keys = { { "gc", mode = { "n", "v" } }, { "gb", mode = { "n", "v" } } },
-    config = function()
-      require("Comment").setup()
-    end
-}
-
 -- Config telescope
 local telescope = {
   'nvim-telescope/telescope.nvim',
@@ -675,6 +701,7 @@ local telescope = {
     vim.keymap.set('n', '<leader>sw', "<cmd>Telescope grep_string<cr>", { desc = '[S]earch current [W]ord' })
     vim.keymap.set('n', '<leader>sg', "<cmd>Telescope live_grep<cr>", { desc = '[S]earch by [G]rep' })
     vim.keymap.set('n', '<leader>sd', "<cmd>Telescope diagnostics<cr>", { desc = '[S]earch [D]iagnostics' })
+    vim.keymap.set('n', '<leader>b', "<cmd>Telescope buffers<cr>", { desc = 'search [B]uffers' })
 
     -- LSP keymap
     vim.keymap.set('n', 'gr', "<cmd>Telescope lsp_references<cr>", { desc = '[G]oto [R]eferences' })
@@ -724,9 +751,9 @@ local lazy_plugins = {
   lualine,
   indent_blankline,
   gitsigns,
-  barbar,
   toggleterm,
-  nvimtree,
+  dropbar,
+  neotree,
   whichkey,
 
   -- Coding
@@ -736,7 +763,6 @@ local lazy_plugins = {
   lspconfig,
   conform,
   illuminate,
-  comment,
   { 'tpope/vim-sleuth', event = "LazyFile" },
 
   -- Language specific
