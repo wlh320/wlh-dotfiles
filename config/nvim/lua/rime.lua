@@ -57,7 +57,7 @@ A language server for librime
       enabled = vim.g.rime_enabled,
       shared_data_dir = "/usr/share/rime-data",
       user_data_dir = "~/.local/share/rime-ls",
-      log_dir = "~/.local/share/rime-ls",
+      log_dir = "/tmp",
       max_candidates = 9,
       paging_characters = {",", "."},
       trigger_characters = {},

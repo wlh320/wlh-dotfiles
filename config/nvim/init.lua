@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2024-05-26
+-- ver 2024-06-11
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -115,7 +115,21 @@ local catppuccin = {
       transparent_background = false,
       term_colors = true,
     })
-    vim.cmd.colorscheme 'catppuccin'
+    -- vim.cmd.colorscheme 'catppuccin'
+  end
+}
+
+-- Config everforest
+local everforest = {
+  'sainnhe/everforest',
+  lazy = false,
+  priority = 1000,
+  config = function()
+    -- Optionally configure and load the colorscheme
+    -- directly inside the plugin declaration.
+    vim.g.everforest_enable_italic = true
+    vim.cmd.colorscheme('everforest')
+    vim.cmd.highlight({ "WinBar", "guibg=NONE" })
   end
 }
 
@@ -227,6 +241,9 @@ local dropbar = {
   },
   opts = {
     general = {
+      enable = function(buf, win)
+        return vim.fn.win_gettype() ~= 'popup'
+      end,
       update_interval = 1000 / 35,
     },
     bar = {
@@ -471,8 +488,8 @@ local cmp = {
             fallback()
           end
         end, { 'i', 's' }),
-        ['<CR>'] = cmp.mapping.confirm({ 
-          behavior = cmp.ConfirmBehavior.Insert, 
+        ['<CR>'] = cmp.mapping.confirm({
+          behavior = cmp.ConfirmBehavior.Insert,
           select = true
         })
       },
@@ -627,8 +644,8 @@ local illuminate = {
   config = function()
     require("illuminate").configure({
       delay = 200,
+      large_file_cutoff = 5000,
       filetypes_denylist = {
-        "NvimTree",
         "toggleterm",
         "TelescopePrompt",
       },
@@ -733,6 +750,7 @@ local vimtex = {
 local lazy_plugins = {
   -- Themes
   catppuccin,
+  everforest,
 
   -- UI related
   lualine,
