@@ -7,10 +7,10 @@ Old Configs (2017 Version) is [HERE](https://github.com/wlh320/wlh-dotfiles/tree
 ## Content
 
 - config (`$HOME/.config`)
-    - i3wm and a lot of related softwares
+    - i3wm and a lot of related softwares (However, I moved to KDE again...)
     - neovim
     - polybar
-    - alacritty
+    - terminals: wezterm / alacritty / kitty (I mainly use wezterm now)
     - fontconfig
 - drawio_config (config for draw.io)
 - rime_config (config for Rime)

@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2024-06-11
+-- ver 2024-07-01
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -74,6 +74,8 @@ vim.keymap.set('n', '<C-h>', '<C-w>h')
 vim.keymap.set('n', '<C-j>', '<C-w>j')
 vim.keymap.set('n', '<C-k>', '<C-w>k')
 vim.keymap.set('n', '<C-l>', '<C-w>l')
+vim.keymap.set('n', '[b', '<cmd>bprevious<cr>', { desc = "Previous Buffer"})
+vim.keymap.set('n', ']b', '<cmd>bnext<cr>', { desc = "Next Buffer"})
 
 -- keymap for toggle some plugins
 vim.keymap.set('n', '<leader>t', '<cmd>exe v:count1 . "ToggleTerm"<cr>', { desc = '[t]erminal' })
@@ -128,6 +130,7 @@ local everforest = {
     -- Optionally configure and load the colorscheme
     -- directly inside the plugin declaration.
     vim.g.everforest_enable_italic = true
+    vim.g.everforest_transparent_background = 1
     vim.cmd.colorscheme('everforest')
     vim.cmd.highlight({ "WinBar", "guibg=NONE" })
   end
