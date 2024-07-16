@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2024-07-01
+-- ver 2024-07-16
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -67,7 +67,7 @@ vim.keymap.set('v', '<leader>y', '"+y')
 vim.keymap.set('n', '<leader>Y', '"+Y')
 
 -- Remap for quick global replacement
-vim.keymap.set('n', '<leader>s', ':%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>', { desc = 'Quick [S]witch'})
+vim.keymap.set('n', '<leader>S', ':%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>', { desc = 'Quick [S]witch'})
 
 -- use Ctrl-hjkl to move between windows
 vim.keymap.set('n', '<C-h>', '<C-w>h')
@@ -325,20 +325,15 @@ local neotree = {
 local whichkey = {
   "folke/which-key.nvim",
   event = "VeryLazy",
-  init = function()
-    vim.o.timeout = true
-    vim.o.timeoutlen = 300
-  end,
   config = function()
     local wk = require("which-key")
-    wk.register({
-      b = { name = "Buffer" },
-      d = { name = "Diagnostic" },
-      g = { name = "Gitsigns" },
-      w = { name = "Workspace" },
-      r = { name = "Rime" },
-      l = { name = "LaTeX" },
-    }, { prefix = "<leader>" })
+    wk.add({
+      { "<leader>d", group = "Diagnostic" },
+      { "<leader>g", group = "Gitsigns" },
+      { "<leader>l", group = "LaTeX" },
+      { "<leader>r", group = "Rime" },
+      { "<leader>w", group = "Workspace" },
+    })
   end
 }
 
@@ -731,7 +726,6 @@ local telescope = {
         }
       }
     }
-
     -- Enable telescope fzf native, if installed
     pcall(require('telescope').load_extension, 'fzf')
     pcall(require('telescope').load_extension, 'ui-select')
@@ -820,7 +814,5 @@ end
 lazy_file()
 
 require('lazy').setup(lazy_plugins, lazy_config)
-
-
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

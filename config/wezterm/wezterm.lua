@@ -11,13 +11,14 @@ config.window_padding = {
   top = 0,
   bottom = 0,
 }
-config.window_background_opacity = 0.92
-config.text_background_opacity = 0.92
+config.window_background_opacity = 0.9
+config.text_background_opacity = 0.9
 
 config.enable_scroll_bar = true
 config.scrollback_lines = 5000
 
 config.use_fancy_tab_bar = false
+config.tab_max_width = 88
 config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
 config.integrated_title_button_alignment = "Left"
 config.integrated_title_buttons = { 'Close', 'Maximize', 'Hide' }
