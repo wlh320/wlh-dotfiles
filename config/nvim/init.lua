@@ -1,17 +1,21 @@
 -- wlh's init.lua configs
--- ver 2024-07-16
+-- ver 2024-10-02
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Make line numbers default
-vim.wo.number = true
+vim.opt.number = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
+
+-- Don't show the mode, since it's already in the status line
+vim.opt.showmode = false
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -19,13 +23,24 @@ vim.o.breakindent = true
 -- Save undo history
 vim.o.undofile = true
 
+-- Sync clipboard between OS and Neovim.
+vim.schedule(function()
+  vim.opt.clipboard = 'unnamedplus'
+end)
+
 -- Case insensitive searching UNLESS /C or capital in search
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
 -- Decrease update time
 vim.o.updatetime = 250
+
+-- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
+
+-- Configure how new splits should be opened
+vim.opt.splitright = true
+vim.opt.splitbelow = true
 
 -- Set color
 vim.o.termguicolors = true
@@ -35,7 +50,6 @@ vim.o.completeopt = 'menuone,noselect'
 -- my custom setting
 vim.opt.cmdheight = 1
 vim.opt.spelllang = "en,cjk"
-vim.opt.relativenumber = true
 vim.wo.cursorline = true
 vim.wo.wrap = false
 vim.wo.colorcolumn = "100" -- column ruler
@@ -74,13 +88,10 @@ vim.keymap.set('n', '<C-h>', '<C-w>h')
 vim.keymap.set('n', '<C-j>', '<C-w>j')
 vim.keymap.set('n', '<C-k>', '<C-w>k')
 vim.keymap.set('n', '<C-l>', '<C-w>l')
+
+-- move between buffer
 vim.keymap.set('n', '[b', '<cmd>bprevious<cr>', { desc = "Previous Buffer"})
 vim.keymap.set('n', ']b', '<cmd>bnext<cr>', { desc = "Next Buffer"})
-
--- keymap for toggle some plugins
-vim.keymap.set('n', '<leader>t', '<cmd>exe v:count1 . "ToggleTerm"<cr>', { desc = '[t]erminal' })
-vim.keymap.set('n', '<leader>T', '<cmd>exe v:count1 . "ToggleTerm direction=vertical"<cr>', { desc = '[T]erminal Vertical'})
-vim.keymap.set('n', '<C-t>', '<cmd>exe v:count1 . "ToggleTerm direction=float"<cr>', { desc = '[t]erminal floating' })
 
 -- Highlight on yank
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -91,6 +102,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- [[ Plugin Settings ]]
+
+-- Install nvchad ui
+vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46_cache/"
 
 -- Install lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -105,67 +119,6 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
-
--- Config Catppuccin
-local catppuccin = {
-  'catppuccin/nvim',
-  lazy = false,
-  name = 'catppuccin',
-  config = function()
-    require('catppuccin').setup({
-      flavour = 'mocha', -- latte, frappe, macchiato, mocha
-      transparent_background = false,
-      term_colors = true,
-    })
-    -- vim.cmd.colorscheme 'catppuccin'
-  end
-}
-
--- Config everforest
-local everforest = {
-  'sainnhe/everforest',
-  lazy = false,
-  priority = 1000,
-  config = function()
-    -- Optionally configure and load the colorscheme
-    -- directly inside the plugin declaration.
-    vim.g.everforest_enable_italic = true
-    vim.g.everforest_transparent_background = 1
-    vim.cmd.colorscheme('everforest')
-    vim.cmd.highlight({ "WinBar", "guibg=NONE" })
-  end
-}
-
--- Config lualine
-local lualine = {
-  'nvim-lualine/lualine.nvim', -- Fancier statusline
-  event = "VeryLazy",
-  config = function()
-    -- rime-ls status on lualine
-    local function rime_status()
-      if vim.g.rime_enabled then
-        return 'ㄓ'
-      else
-        return ''
-      end
-    end
-
-    -- global status line because we have winbar now
-    vim.opt.laststatus = 3
-
-    require('lualine').setup {
-      options = {
-        icons_enabled = false,
-        theme = 'auto',
-        component_separators = '|',
-        section_separators = '',
-      },
-      sections = {
-        lualine_x = { rime_status, 'encoding', 'fileformat', 'filetype' },
-      }
-    }
-  end
-}
 
 -- Config indent_blankline
 local indent_blankline = {
@@ -205,76 +158,6 @@ local gitsigns = {
     vim.keymap.set('n', '<leader>gh', '<cmd>Gitsigns preview_hunk<cr>', { desc = '[G]itsigns preview [H]unks' })
     vim.keymap.set('n', '<leader>gr', '<cmd>Gitsigns reset_hunk<cr>', { desc = '[G]itsigns [R]eset hunk' })
   end
-}
-
--- Config toggleterm
-local toggleterm = {
-  'akinsho/toggleterm.nvim',
-  version = '*', -- Terminal
-  cmd = { 'ToggleTerm' },
-  config = function()
-    require('toggleterm').setup({
-      size = function(term)
-        if term.direction == 'horizontal' then
-          return 15
-        elseif term.direction == 'vertical' then
-          return vim.o.columns * 0.3
-        end
-      end
-    })
-    -- set keymaps to easily move between buffers and terminal
-    function _G.set_terminal_keymaps()
-      local opts = { buffer = 0 }
-      vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)
-      vim.keymap.set('t', 'jk', [[<C-\><C-n><Cmd>ToggleTerm<CR>]], opts)
-    end
-
-    vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
-  end
-}
-
--- Config dropbar
-local dropbar = {
-  'Bekaboo/dropbar.nvim',
-  lazy = false,
-  -- optional, but required for fuzzy finder support
-  dependencies = {
-    'nvim-telescope/telescope-fzf-native.nvim',
-    'nvim-tree/nvim-web-devicons'
-  },
-  opts = {
-    general = {
-      enable = function(buf, win)
-        return vim.fn.win_gettype() ~= 'popup'
-      end,
-      update_interval = 1000 / 35,
-    },
-    bar = {
-      sources = function(buf, _)
-        local sources = require('dropbar.sources')
-        local utils = require('dropbar.utils')
-        if vim.bo[buf].ft == 'markdown' then
-          return {
-            sources.path,
-            sources.markdown,
-          }
-        end
-        if vim.bo[buf].buftype == 'terminal' then
-          return {
-            sources.terminal,
-          }
-        end
-        return {
-          sources.path,
-          utils.source.fallback({
-            sources.lsp
-            -- sources.treesitter, -- no treesitter
-          }),
-        }
-    end,
-    }
-  }
-
 }
 
 -- Config neotree
@@ -347,7 +230,7 @@ local treesitter = {
   config = function()
     require('nvim-treesitter.configs').setup {
       -- Add languages to be installed here that you want installed for treesitter
-      ensure_installed = { 'c', 'cpp', 'go', 'python', 'rust', 'vimdoc', 'lua', 'vim' },
+      ensure_installed = { 'c', 'cpp', 'python', 'rust', 'vimdoc', 'vim', 'lua', 'go', 'latex' },
 
       highlight = { enable = true },
       indent = { enable = true },
@@ -448,7 +331,7 @@ local cmp = {
       return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
     end
 
-    cmp.setup {
+    local options = {
       sorting = {
         comparators = {
           compare.sort_text,
@@ -498,6 +381,8 @@ local cmp = {
         { name = 'nvim_lsp_signature_help' }
       },
     }
+    options = vim.tbl_deep_extend("force", options, require "nvchad.cmp")
+    require("cmp").setup(options)
   end
 }
 
@@ -531,7 +416,8 @@ local lspconfig = {
         vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
       end
 
-      nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+      -- nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+      nmap('<leader>rn', require('nvchad.lsp.renamer'), '[R]e[n]ame')
       nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
       nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
@@ -575,8 +461,7 @@ local lspconfig = {
     capabilities.offsetEncoding = { 'utf-16' }
 
     -- Load mason_lspconfig
-    local mason_lspconfig = require 'mason-lspconfig'
-    mason_lspconfig.setup_handlers {
+    require('mason-lspconfig').setup_handlers {
       function(server_name)
         require('lspconfig')[server_name].setup {
           capabilities = capabilities,
@@ -642,7 +527,7 @@ local illuminate = {
   config = function()
     require("illuminate").configure({
       delay = 200,
-      large_file_cutoff = 5000,
+      large_file_cutoff = 2000,
       filetypes_denylist = {
         "toggleterm",
         "TelescopePrompt",
@@ -690,7 +575,6 @@ local telescope = {
       vim.fn.system('git rev-parse --is-inside-work-tree')
       if vim.v.shell_error == 0 then builtin.git_files() else builtin.find_files() end
     end, { desc = 'Ctrl-P: search editable files' })
-    vim.keymap.set('n', '<leader>?', "<cmd>Telescope oldfiles<cr>", { desc = 'Find recent files' })
     vim.keymap.set('n', '<leader>sb', function()
       local builtin = require('telescope.builtin')
       builtin.current_buffer_fuzzy_find(
@@ -704,6 +588,7 @@ local telescope = {
     vim.keymap.set('n', '<leader>sg', "<cmd>Telescope live_grep<cr>", { desc = '[S]earch by [G]rep' })
     vim.keymap.set('n', '<leader>sd', "<cmd>Telescope diagnostics<cr>", { desc = '[S]earch [D]iagnostics' })
     vim.keymap.set('n', '<leader>b', "<cmd>Telescope buffers<cr>", { desc = 'search [B]uffers' })
+    vim.keymap.set('n', '<leader>?', "<cmd>Telescope oldfiles<cr>", { desc = 'Find recent files' })
 
     -- LSP keymap
     vim.keymap.set('n', 'gr', "<cmd>Telescope lsp_references<cr>", { desc = '[G]oto [R]eferences' })
@@ -743,18 +628,45 @@ local vimtex = {
   end,
 }
 
+-- Config nvchad
+local nvchad_ui = {
+  "nvchad/ui",
+  lazy = false,
+  config = function()
+    require "nvchad"
+
+    -- global statusline
+    vim.opt.laststatus = 3
+
+    -- set keymaps to easily move between buffers and terminal
+    function _G.set_terminal_keymaps()
+      local opts = { buffer = 0 }
+      vim.keymap.set('t', 'jk', [[<C-\><C-n>]], opts)
+    end
+    vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+
+    vim.keymap.set('n', '<leader>t', function() require('nvchad.term').toggle { pos = "bo sp", id = "tt" } end, { desc = '[t]erminal' })
+    vim.keymap.set('n', '<leader>T', function() require('nvchad.term').toggle { pos = "vsp", id = "tT" } end, { desc = '[T]erminal vertical' })
+    vim.keymap.set('n', '<C-t>', function()  require('nvchad.term').toggle { pos = "float", id = "tf" } end, { desc = '[t]erminal floating' })
+  end
+}
+
+local nvchad_base46 = {
+  "nvchad/base46",
+  build = function()
+    require("base46").load_all_highlights()
+  end,
+}
+
 -- Config Lazy
 local lazy_plugins = {
   -- Themes
-  catppuccin,
-  everforest,
+  nvchad_base46,
 
   -- UI related
-  lualine,
+  nvchad_ui,
   indent_blankline,
   gitsigns,
-  toggleterm,
-  dropbar,
   neotree,
   whichkey,
 
@@ -811,8 +723,14 @@ local lazy_file = function ()
   Event.mappings.LazyFile = { id = "LazyFile", event = lazy_file_events }
   Event.mappings["User LazyFile"] = Event.mappings.LazyFile
 end
-lazy_file()
 
+lazy_file()
 require('lazy').setup(lazy_plugins, lazy_config)
+
+-- nvchad theme
+for _, v in ipairs(vim.fn.readdir(vim.g.base46_cache)) do
+ dofile(vim.g.base46_cache .. v)
+end
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
