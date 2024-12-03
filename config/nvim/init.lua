@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2024-10-02
+-- ver 2024-12-03
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -230,7 +230,7 @@ local treesitter = {
   config = function()
     require('nvim-treesitter.configs').setup {
       -- Add languages to be installed here that you want installed for treesitter
-      ensure_installed = { 'c', 'cpp', 'python', 'rust', 'vimdoc', 'vim', 'lua', 'go', 'latex' },
+      ensure_installed = { 'c', 'cpp', 'python', 'rust', 'vimdoc', 'vim', 'lua', 'go' },
 
       highlight = { enable = true },
       indent = { enable = true },
@@ -296,94 +296,67 @@ local treesitter = {
   end
 }
 
--- Config nvim-cmp
-local cmp = {
-  'hrsh7th/nvim-cmp',
-  version = false,
-  event = "InsertEnter",
-  dependencies = {
-    {
-      'hrsh7th/cmp-buffer',
-      'hrsh7th/cmp-path',
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-nvim-lsp-signature-help',
-    },
-    { -- Config autopairs
-      "windwp/nvim-autopairs",
-      event = "InsertEnter",
-      config = function()
-        require("nvim-autopairs").setup {}
-        local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-        require('cmp').event:on(
-          'confirm_done',
-          cmp_autopairs.on_confirm_done()
-        )
-      end
-    },
-  },
+-- Config blink
+local blink = {
+  'saghen/blink.cmp',
+  lazy = false, -- lazy loading handled internally
+  -- use a release tag to download pre-built binaries
+  version = 'v0.*',
+  -- build = 'cargo build --release',
   config = function()
-    local cmp = require 'cmp'
-    local compare = require 'cmp.config.compare'
+    local rime_complete = function(cmp, index)
+      local list = require('blink.cmp.completion.list')
+      if not list then return end
+      local item = list.items[index or list.selected_item_idx]
+      if not item then return end
+      local client = vim.lsp.get_client_by_id(item.client_id)
+      if (not client) or client.name ~= "rime_ls" then return end
 
-    local has_words_before = function()
-      unpack = unpack or table.unpack
-      local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-      return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+      cmp.accept({ index = index })
     end
 
-    local options = {
-      sorting = {
-        comparators = {
-          compare.sort_text,
-          compare.offset,
-          compare.exact,
-          compare.score,
-          compare.recently_used,
-          compare.kind,
-          compare.length,
-          compare.order,
+    require('blink.cmp').setup {
+      -- 'default', 'super-tab', 'enter'
+      keymap = { 
+        preset = 'enter',
+        ['<Tab>'] = { 'snippet_forward', 'select_next', 'fallback' },
+        ['<S-Tab>'] = { 'snippet_backward', 'select_prev', 'fallback' },
+        ['1'] = { function(cmp) rime_complete(cmp, 1) end, 'fallback' },
+        ['2'] = { function(cmp) rime_complete(cmp, 2) end, 'fallback' },
+        ['3'] = { function(cmp) rime_complete(cmp, 3) end, 'fallback' },
+        ['4'] = { function(cmp) rime_complete(cmp, 4) end, 'fallback' },
+        ['5'] = { function(cmp) rime_complete(cmp, 5) end, 'fallback' },
+        ['6'] = { function(cmp) rime_complete(cmp, 6) end, 'fallback' },
+        ['7'] = { function(cmp) rime_complete(cmp, 7) end, 'fallback' },
+        ['8'] = { function(cmp) rime_complete(cmp, 8) end, 'fallback' },
+        ['9'] = { function(cmp) rime_complete(cmp, 9) end, 'fallback' },
+      },
+      completion = {
+        documentation = {
+          auto_show = true
+        },
+        menu = {
+          scrollbar = false,
+          border = "single",
+          winhighlight = "Normal:CmpPmenu,CursorLine:CmpSel,Search:None,FloatBorder:CmpBorder",
         }
       },
-      mapping = cmp.mapping.preset.insert {
-        ['<C-n>'] = cmp.mapping.select_next_item(),
-        ['<C-p>'] = cmp.mapping.select_prev_item(),
-        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<Tab>'] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_next_item()
-          elseif vim.snippet.active({ direction = 1 }) then
-            vim.snippet.jump(1)
-          elseif has_words_before() then
-            cmp.complete()
-          else
-            fallback()
-          end
-        end, { 'i', 's' }),
-        ['<S-Tab>'] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_prev_item()
-          elseif vim.snippet.active({ direction = -1 }) then
-            vim.snippet.jump(-1)
-          else
-            fallback()
-          end
-        end, { 'i', 's' }),
-        ['<CR>'] = cmp.mapping.confirm({
-          behavior = cmp.ConfirmBehavior.Insert,
-          select = true
-        })
-      },
       sources = {
-        { name = 'nvim_lsp' },
-        { name = 'buffer' },
-        { name = 'path' },
-        { name = 'nvim_lsp_signature_help' }
+        completion = {
+          enabled_providers = { 'lsp', 'path', 'snippets', 'buffer' },
+        },
       },
     }
-    options = vim.tbl_deep_extend("force", options, require "nvchad.cmp")
-    require("cmp").setup(options)
-  end
+  end,
+  -- allows extending the enabled_providers array elsewhere in your config
+  opts_extend = { "sources.completion.enabled_providers" }
+}
+
+-- Autopairs
+local autopairs = {
+  'windwp/nvim-autopairs',
+  event = "InsertEnter",
+  config = true
 }
 
 -- Mason
@@ -456,7 +429,7 @@ local lspconfig = {
 
     -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
     local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+    capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
     -- force utf-16
     capabilities.offsetEncoding = { 'utf-16' }
 
@@ -672,7 +645,8 @@ local lazy_plugins = {
 
   -- Coding
   treesitter,
-  cmp,
+  blink,
+  autopairs,
   mason,
   lspconfig,
   conform,

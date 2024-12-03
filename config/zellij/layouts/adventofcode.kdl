@@ -9,7 +9,7 @@ layout {
         }
     }
 
-    tab name="main" hide_floating_panes=true cwd="~/coding/shuaOJ/AdventOfCode/2023" {
+    tab name="main" hide_floating_panes=true {
         pane split_direction="vertical" {
             pane size="60%" {
                 name "nvim"
