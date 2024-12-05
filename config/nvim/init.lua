@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2024-12-03
+-- ver 2024-12-05
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -304,32 +304,24 @@ local blink = {
   version = 'v0.*',
   -- build = 'cargo build --release',
   config = function()
-    local rime_complete = function(cmp, index)
-      local list = require('blink.cmp.completion.list')
-      if not list then return end
-      local item = list.items[index or list.selected_item_idx]
-      if not item then return end
+    -- if last char is number, and the only completion item is provided by rime-ls, accept it
+    require('blink.cmp.completion.list').show_emitter:on(function(event) 
+      local items = event.items
+      local line = event.context.line
+      local col = vim.fn.col('.') - 1
+      if #items ~= 1 then return end
+      if line:sub(col - 1, col):match("%a%d") == nil then return end
+      local item = items[1]
       local client = vim.lsp.get_client_by_id(item.client_id)
       if (not client) or client.name ~= "rime_ls" then return end
-
-      cmp.accept({ index = index })
-    end
+      require('blink.cmp').accept({ index = 1 })
+    end)
 
     require('blink.cmp').setup {
-      -- 'default', 'super-tab', 'enter'
       keymap = { 
-        preset = 'enter',
+        preset = 'enter', -- 'default', 'super-tab', 'enter'
         ['<Tab>'] = { 'snippet_forward', 'select_next', 'fallback' },
         ['<S-Tab>'] = { 'snippet_backward', 'select_prev', 'fallback' },
-        ['1'] = { function(cmp) rime_complete(cmp, 1) end, 'fallback' },
-        ['2'] = { function(cmp) rime_complete(cmp, 2) end, 'fallback' },
-        ['3'] = { function(cmp) rime_complete(cmp, 3) end, 'fallback' },
-        ['4'] = { function(cmp) rime_complete(cmp, 4) end, 'fallback' },
-        ['5'] = { function(cmp) rime_complete(cmp, 5) end, 'fallback' },
-        ['6'] = { function(cmp) rime_complete(cmp, 6) end, 'fallback' },
-        ['7'] = { function(cmp) rime_complete(cmp, 7) end, 'fallback' },
-        ['8'] = { function(cmp) rime_complete(cmp, 8) end, 'fallback' },
-        ['9'] = { function(cmp) rime_complete(cmp, 9) end, 'fallback' },
       },
       completion = {
         documentation = {
