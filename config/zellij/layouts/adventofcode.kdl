@@ -18,7 +18,7 @@ layout {
             pane split_direction="horizontal" size="40%" {
                 pane name="data"
                 pane name="run" {
-                    command "python"
+                    command "pypy3"
                     args "solve.py"
                 }
             }

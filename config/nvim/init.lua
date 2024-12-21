@@ -305,7 +305,7 @@ local blink = {
   -- build = 'cargo build --release',
   config = function()
     -- if last char is number, and the only completion item is provided by rime-ls, accept it
-    require('blink.cmp.completion.list').show_emitter:on(function(event) 
+    require('blink.cmp.completion.list').show_emitter:on(function(event)
       local items = event.items
       local line = event.context.line
       local col = vim.fn.col('.') - 1
@@ -318,30 +318,32 @@ local blink = {
     end)
 
     require('blink.cmp').setup {
-      keymap = { 
+      keymap = {
         preset = 'enter', -- 'default', 'super-tab', 'enter'
         ['<Tab>'] = { 'snippet_forward', 'select_next', 'fallback' },
         ['<S-Tab>'] = { 'snippet_backward', 'select_prev', 'fallback' },
+        ['<C-y>'] = { "select_and_accept" },
       },
       completion = {
         documentation = {
           auto_show = true
         },
         menu = {
-          scrollbar = false,
           border = "single",
           winhighlight = "Normal:CmpPmenu,CursorLine:CmpSel,Search:None,FloatBorder:CmpBorder",
         }
       },
       sources = {
-        completion = {
-          enabled_providers = { 'lsp', 'path', 'snippets', 'buffer' },
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+        providers = {
+          lsp = {
+            transform_items = function(_, items) return items end
+          }
         },
+        cmdline = {}
       },
     }
   end,
-  -- allows extending the enabled_providers array elsewhere in your config
-  opts_extend = { "sources.completion.enabled_providers" }
 }
 
 -- Autopairs

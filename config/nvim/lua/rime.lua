@@ -66,7 +66,7 @@ A language server for librime
       always_incomplete = false,
       preselect_first = false,
       show_filter_text_in_label = false,
-      long_filter_text = false,
+      long_filter_text = true,
     },
     on_attach = rime_on_attach,
     capabilities = capabilities,
