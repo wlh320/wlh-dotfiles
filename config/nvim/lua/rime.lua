@@ -13,7 +13,7 @@ function M.setup_rime()
         name = "rime_ls",
         -- cmd = { 'rime_ls' },
         -- cmd = { '/home/wlh/coding/rime-ls/target/debug/rime_ls' },
-        -- -- cmd = { '/home/wlh/coding/rime-ls/target/release/rime_ls' },
+        -- cmd = { '/home/wlh/coding/rime-ls/target/release/rime_ls' },
         cmd = vim.lsp.rpc.connect('127.0.0.1', 9257),
         filetypes = { '*' },
         single_file_support = true,
@@ -51,6 +51,7 @@ A language server for librime
   -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
+  capabilities.general.positionEncodings = { 'utf-8', 'utf-16' }
 
   lspconfig.rime_ls.setup {
     init_options = {

@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2024-12-05
+-- ver 2024-12-25
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -306,13 +306,10 @@ local blink = {
   config = function()
     -- if last char is number, and the only completion item is provided by rime-ls, accept it
     require('blink.cmp.completion.list').show_emitter:on(function(event)
-      local items = event.items
-      local line = event.context.line
+      if #event.items ~= 1 then return end
       local col = vim.fn.col('.') - 1
-      if #items ~= 1 then return end
-      if line:sub(col - 1, col):match("%a%d") == nil then return end
-      local item = items[1]
-      local client = vim.lsp.get_client_by_id(item.client_id)
+      if event.context.line:sub(1, col):match("^.*%a+%d+$") == nil then return end
+      local client = vim.lsp.get_client_by_id(event.items[1].client_id)
       if (not client) or client.name ~= "rime_ls" then return end
       require('blink.cmp').accept({ index = 1 })
     end)
@@ -351,6 +348,13 @@ local autopairs = {
   'windwp/nvim-autopairs',
   event = "InsertEnter",
   config = true
+}
+
+-- Tabout
+local tabout = {
+  'abecodes/tabout.nvim',
+  lazy = false,
+  config = true,
 }
 
 -- Mason
@@ -424,8 +428,8 @@ local lspconfig = {
     -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
-    -- force utf-16
-    capabilities.offsetEncoding = { 'utf-16' }
+    -- force utf-8
+    capabilities.general.positionEncodings = { 'utf-8', 'utf-16' }
 
     -- Load mason_lspconfig
     require('mason-lspconfig').setup_handlers {
@@ -641,6 +645,7 @@ local lazy_plugins = {
   treesitter,
   blink,
   autopairs,
+  tabout,
   mason,
   lspconfig,
   conform,
