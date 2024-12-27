@@ -1,0 +1,6 @@
+font-size = 16
+theme = catppuccin-mocha
+window-theme = ghostty
+background-opacity = 0.9
+mouse-scroll-multiplier = 2
+gtk-single-instance = true
