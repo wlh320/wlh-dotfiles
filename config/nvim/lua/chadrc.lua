@@ -16,7 +16,7 @@ local M = {
   ui = {
     statusline = {
       theme = "default",
-      separator_style = "block",
+      separator_style = "round",
       order = { "mode", "file", "git", "%=", "diagnostics", "rime", "info", "cursor" },
       modules = {
         info = " %{&filetype} | %l:%c ",

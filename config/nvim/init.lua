@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2024-12-25
+-- ver 2024-12-28
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -314,10 +314,22 @@ local blink = {
       require('blink.cmp').accept({ index = 1 })
     end)
 
+    -- link BlinkCmpKind to CmpItemKind since nvchad/base46 does not support it
+    local set_hl = function(hl_group, opts)
+      opts.default = true -- Prevents overriding existing definitions
+      vim.api.nvim_set_hl(0, hl_group, opts)
+    end
+    for _, kind in ipairs(require('blink.cmp.types').CompletionItemKind) do
+      set_hl('BlinkCmpKind' .. kind, { link = 'CmpItemKind' .. kind or 'BlinkCmpKind' })
+    end
+
     require('blink.cmp').setup {
       keymap = {
         preset = 'enter', -- 'default', 'super-tab', 'enter'
-        ['<Tab>'] = { 'snippet_forward', 'select_next', 'fallback' },
+        ['<Tab>'] = { function(cmp)
+          if cmp.snippet_active() then return false
+          else return cmp.show() end
+        end, 'snippet_forward', 'select_next', 'fallback' },
         ['<S-Tab>'] = { 'snippet_backward', 'select_prev', 'fallback' },
         ['<C-y>'] = { "select_and_accept" },
       },
@@ -326,6 +338,10 @@ local blink = {
           auto_show = true
         },
         menu = {
+          auto_show = function(ctx) return ctx.mode ~= 'cmdline' end,
+          draw = {
+            columns = { { "kind_icon", "label", "label_description", gap = 1 }, { "kind" } },
+          },
           border = "single",
           winhighlight = "Normal:CmpPmenu,CursorLine:CmpSel,Search:None,FloatBorder:CmpBorder",
         }
@@ -334,10 +350,16 @@ local blink = {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
         providers = {
           lsp = {
-            transform_items = function(_, items) return items end
+            transform_items = function(_, items)
+              for _, item in ipairs(items) do
+                if item.kind == require('blink.cmp.types').CompletionItemKind.Snippet then
+                  item.score_offset = item.score_offset - 3
+                end
+              end
+              return items
+            end
           }
         },
-        cmdline = {}
       },
     }
   end,
