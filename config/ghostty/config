@@ -1,6 +1,9 @@
 font-size = 16
 theme = catppuccin-mocha
+# window-decoration = true
 window-theme = ghostty
+window-height = 25
+window-width = 80
 background-opacity = 0.9
 mouse-scroll-multiplier = 2
 gtk-single-instance = true
