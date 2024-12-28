@@ -326,12 +326,9 @@ local blink = {
     require('blink.cmp').setup {
       keymap = {
         preset = 'enter', -- 'default', 'super-tab', 'enter'
-        ['<Tab>'] = { function(cmp)
-          if cmp.snippet_active() then return false
-          else return cmp.show() end
-        end, 'snippet_forward', 'select_next', 'fallback' },
+        ['<Tab>'] = { 'snippet_forward', 'select_next', 'fallback' },
         ['<S-Tab>'] = { 'snippet_backward', 'select_prev', 'fallback' },
-        ['<C-y>'] = { "select_and_accept" },
+        ['<C-y>'] = { 'show', 'select_and_accept' },
       },
       completion = {
         documentation = {
