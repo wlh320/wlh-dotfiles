@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2024-12-28
+-- ver 2025-01-02
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -454,23 +454,11 @@ local lspconfig = {
     require('mason-lspconfig').setup_handlers {
       function(server_name)
         require('lspconfig')[server_name].setup {
+          offset_encoding = "utf-8", -- wtf? if not set, it shows warning
           capabilities = capabilities,
           on_attach = on_attach,
         }
       end,
-      -- dedicated handler
-      ["texlab"] = function()
-        require('lspconfig').texlab.setup {
-          capabilities = capabilities,
-          on_attach = on_attach,
-          settings = {
-            texlab = {
-              -- I prefer formatting bibtex file with latexindent
-              bibtexFormatter = 'latexindent'
-            }
-          }
-        }
-      end
     }
 
     -- My rime-ls settings

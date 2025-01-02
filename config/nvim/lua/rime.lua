@@ -2,7 +2,7 @@ local M = {}
 
 function M.setup_rime()
   -- global status
-  vim.g.rime_enabled = false
+  vim.g.rime_enabled = true
 
   -- add rime to lspconfig as a custom server
   local lspconfig = require('lspconfig')
@@ -46,6 +46,25 @@ A language server for librime
     vim.keymap.set('n', '<leader>rs',
       function() vim.lsp.buf.execute_command({ command = "rime-ls.sync-user-data" }) end,
       { desc = '[R]ime [S]ync' })
+
+    -- set trigger for different filetypes
+    local set_rime_trigger = function(trigger)
+      local clients = vim.lsp.get_clients({
+        bufnr = vim.api.nvim_get_current_buf(),
+        name = 'rime_ls',
+      })
+      for _, client in ipairs(clients) do
+        local settings = { trigger_characters = trigger }
+        client.config.settings = settings
+        client.notify("workspace/didChangeConfiguration", { settings = settings })
+      end
+    end
+    local filetype = vim.bo.filetype
+    if filetype == "tex" or filetype == "markdown" or filetype == "text" then
+      set_rime_trigger({})
+    else
+      set_rime_trigger({">"})
+    end
   end
 
   -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
@@ -75,3 +94,4 @@ A language server for librime
 end
 
 return M
+-- vim: ts=2 sts=2 sw=2 et
