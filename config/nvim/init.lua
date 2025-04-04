@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2025-01-02
+-- ver 2025-04-04
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -340,7 +340,6 @@ local blink = {
             columns = { { "kind_icon", "label", "label_description", gap = 1 }, { "kind" } },
           },
           border = "single",
-          winhighlight = "Normal:CmpPmenu,CursorLine:CmpSel,Search:None,FloatBorder:CmpBorder",
         }
       },
       sources = {
@@ -462,7 +461,7 @@ local lspconfig = {
     }
 
     -- My rime-ls settings
-    require('rime').setup_rime()
+    vim.lsp.enable('rime_ls')
   end
 }
 
@@ -606,6 +605,18 @@ local vimtex = {
   end,
 }
 
+local typst = {
+  'chomosuke/typst-preview.nvim',
+  ft = 'typst',
+  version = '1.*',
+  opts = {
+    dependencies_bin = {
+      ['tinymist'] = 'tinymist',
+      ['websocat'] = 'websocat'
+    },
+  }, -- lazy.nvim will implicitly calls `setup {}`
+}
+
 -- Config nvchad
 local nvchad_ui = {
   "nvchad/ui",
@@ -661,6 +672,7 @@ local lazy_plugins = {
 
   -- Language specific
   vimtex,
+  typst,
 
   -- Fuzzy Finder (files, lsp, etc)
   telescope,
