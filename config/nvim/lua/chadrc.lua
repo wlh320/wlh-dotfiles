@@ -8,12 +8,11 @@ local M = {
       }
     }
   },
-  cmp = {
-    icons = true,
-    lspkind_text = true,
-    style = "default",
-  },
   ui = {
+    cmp = {
+      icons_left = true,
+      style = "atom_colored",
+    },
     statusline = {
       theme = "default",
       separator_style = "round",

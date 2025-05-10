@@ -44,14 +44,13 @@ end
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
+-- capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
 
 return {
   name = "rime_ls",
-  -- cmd = { 'rime_ls' },
   -- cmd = { '/home/wlh/coding/rime-ls/target/debug/rime_ls' },
-  cmd = { '/home/wlh/coding/rime-ls/target/release/rime_ls' },
-  -- cmd = vim.lsp.rpc.connect('127.0.0.1', 9257),
+  -- cmd = { '/home/wlh/coding/rime-ls/target/release/rime_ls' },
+  cmd = vim.lsp.rpc.connect('127.0.0.1', 9257),
 
   init_options = {
     enabled = vim.g.rime_enabled,
