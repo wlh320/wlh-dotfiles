@@ -1,5 +1,5 @@
 -- wlh's init.lua configs
--- ver 2025-05-10
+-- ver 2025-11-08
 -- heavily using nvim-lua/kickstart.nvim for reference
 
 -- [[ Basic Settings ]]
@@ -23,10 +23,11 @@ vim.o.breakindent = true
 -- Save undo history
 vim.o.undofile = true
 
+-- FIXME: uncomment this makes 'dd' can not repeat
 -- Sync clipboard between OS and Neovim.
-vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
-end)
+-- vim.schedule(function()
+--   vim.opt.clipboard = 'unnamedplus'
+-- end)
 
 -- Case insensitive searching UNLESS /C or capital in search
 vim.o.ignorecase = true
@@ -106,17 +107,20 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- Install nvchad ui
 vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46_cache/"
 
--- Install lazy.nvim
+-- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -360,20 +364,11 @@ local tabout = {
   config = true,
 }
 
--- Mason
-local mason = {
-  "williamboman/mason.nvim",
-  cmd = { "Mason", "MasonInstall", "MasonInstallAll", "MasonUninstall", "MasonUninstallAll", "MasonLog" },
-  config = true,
-}
-
 -- Config LSP
 local lspconfig = {
   'neovim/nvim-lspconfig',
-  event = "LazyFile",
+  lazy = false,
   dependencies = {
-    -- Setup lsp installed in mason
-    'williamboman/mason-lspconfig.nvim',
     -- Useful status updates for LSP
     { 'j-hui/fidget.nvim', config = true },
   },
@@ -433,6 +428,11 @@ local lspconfig = {
     capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
     -- force utf-8
     capabilities.general.positionEncodings = { 'utf-8', 'utf-16' }
+
+    -- enable lsp I use
+    vim.lsp.enable('pyright')
+    vim.lsp.enable('clangd')
+    vim.lsp.enable('rust_analyzer')
 
     -- My rime-ls settings
     vim.lsp.enable('rime_ls')
@@ -638,7 +638,6 @@ local lazy_plugins = {
   blink,
   autopairs,
   tabout,
-  mason,
   lspconfig,
   conform,
   illuminate,
@@ -658,31 +657,6 @@ local lazy_config = {
 
 -- Copy from LazyVim
 local lazy_file = function ()
-  -- This autocmd will only trigger when a file was loaded from the cmdline.
-  -- It will render the file as quickly as possible.
-  vim.api.nvim_create_autocmd("BufReadPost", {
-    once = true,
-    callback = function(event)
-      -- Skip if we already entered vim
-      if vim.v.vim_did_enter == 1 then
-        return
-      end
-
-      -- Try to guess the filetype (may change later on during Neovim startup)
-      local ft = vim.filetype.match({ buf = event.buf })
-      if ft then
-        -- Add treesitter highlights and fallback to syntax
-        local lang = vim.treesitter.language.get_lang(ft)
-        if not (lang and pcall(vim.treesitter.start, event.buf, lang)) then
-          vim.bo[event.buf].syntax = ft
-        end
-
-        -- Trigger early redraw
-        vim.cmd([[redraw]])
-      end
-    end,
-  })
-
   -- Add support for the LazyFile event
   local Event = require("lazy.core.handler.event")
   local lazy_file_events = { "BufReadPost", "BufNewFile", "BufWritePre" }

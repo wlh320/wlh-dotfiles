@@ -1,9 +1,9 @@
-font-size = 16
+font-size = 11
 theme = catppuccin-mocha
 # window-decoration = true
 window-theme = ghostty
 window-height = 25
-window-width = 80
+window-width = 100
 background-opacity = 0.9
 background-blur = true
 mouse-scroll-multiplier = 2
